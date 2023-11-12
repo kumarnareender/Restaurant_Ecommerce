@@ -7,7 +7,7 @@ namespace Application.Common
         admin,
         manager,
         salesperson,
-        customer        
+        customer
     }
 
     public enum EAdStatus
@@ -27,7 +27,8 @@ namespace Application.Common
     public enum EPaymentStatus
     {
         Pending,
-        Done
+        Done,
+        Paid
     }
 
     public enum EOrderMode

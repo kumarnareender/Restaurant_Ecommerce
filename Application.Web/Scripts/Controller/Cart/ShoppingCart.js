@@ -39,6 +39,21 @@
         builtShoppingCartItems();
     });
 
+    //let productIds = [];
+
+
+    function clearCartByProductIds() {
+        let productIds = window.localStorage.getItem("productIds");
+        if (productIds != null && productIds != '') {
+            productIds = productIds.split(",");
+            for (let i = 0; i < productIds.length; i++) {
+                removeCartItem(productIds[i]);
+            }
+        }
+        //builtShoppingCartItems();
+
+    }
+
     $(document).on('click', '.tables-click', function () {
         $("._tables").prop("checked", false);
         /*        var id = $("._tables:checked").val();*/
@@ -48,7 +63,36 @@
         //    //return;
         //}
 
-        $("#myModal").modal('hide');
+        $.ajax({
+            dataType: "json",
+            url: '/RestaurantTables/GetOrderDetailsByTableNumber',
+            data: { tableId: dataid },
+            success: function (recordSet) {
+
+                clearCartByProductIds();
+                let productIds = [];
+
+                if (recordSet.OrderItems != null) {
+                    if (recordSet.OrderItems.length > 0) {
+                        for (let i = 0; i < recordSet.OrderItems.length; i++) {
+                            productIds.push(recordSet.OrderItems[i].ProductId);
+                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0);
+                        }
+
+                    }
+                }
+                window.localStorage.setItem("productIds", productIds);
+                console.log(recordSet);
+                builtShoppingCartItems();
+                $("#myModal").modal('hide');
+            },
+            error: function (xhr) {
+                $('.item-loading').hide();
+            }
+        });
+
+
+
         //console.log("CheckboxId: ", id);
         //console.log("CheckboxId-dataid: ", dataid);
     });

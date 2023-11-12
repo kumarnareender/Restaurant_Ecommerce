@@ -108,8 +108,8 @@ app.controller('AdminOrderListCtrl', ['$rootScope', '$scope', '$http', '$filter'
                     { "title": "Payment Type", "class": "center" },
                     { "title": "Order Date" },
                     { "title": "Action", "class": "center" },
-                    { "title": "Edit", "class": "center" },
-                    { "title": "Payment", "class": "center" }
+                    //{ "title": "Edit", "class": "center" },
+                    //{ "title": "Payment", "class": "center" }
                 ],
                 "aoColumnDefs": [
                     {
@@ -136,22 +136,22 @@ app.controller('AdminOrderListCtrl', ['$rootScope', '$scope', '$http', '$filter'
                             return $("<div/>").append(text).html();
                         }
                     },
-                    {
-                        "aTargets": [9],
-                        "bSortable": false,
-                        "mRender": function (data, type, row) {
-                            var text = '<a id=' + row[0] + ' href="/Order/SalesReturn?orderId=' + row[0] + '" class="btn btn-warning btn-sales-return">Edit</a>';
-                            return $("<div/>").append(text).html();
-                        }
-                    },
-                    {
-                        "aTargets": [10],
-                        "bSortable": false,
-                        "mRender": function (data, type, row) {
-                            var text = '<a id=' + row[0] + ' href="/OrderPaymentStatus/paymentsOrderDetails?orderId=' + row[0] + '&ordertype=order" class="btn btn-info btn-sales-return">Payment</a>';
-                            return $("<div/>").append(text).html();
-                        }
-                    }
+                    //{
+                    //    "aTargets": [9],
+                    //    "bSortable": false,
+                    //    "mRender": function (data, type, row) {
+                    //        var text = '<a id=' + row[0] + ' href="/Order/SalesReturn?orderId=' + row[0] + '" class="btn btn-warning btn-sales-return">Edit</a>';
+                    //        return $("<div/>").append(text).html();
+                    //    }
+                    //},
+                    //{
+                    //    "aTargets": [10],
+                    //    "bSortable": false,
+                    //    "mRender": function (data, type, row) {
+                    //        var text = '<a id=' + row[0] + ' href="/OrderPaymentStatus/paymentsOrderDetails?orderId=' + row[0] + '&ordertype=order" class="btn btn-info btn-sales-return">Payment</a>';
+                    //        return $("<div/>").append(text).html();
+                    //    }
+                    //}
                 ]
             });
 

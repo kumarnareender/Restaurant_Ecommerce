@@ -23,14 +23,17 @@ namespace Application.Controllers
         private IProductService productService;
         private IProductImageService productImageService;
         private IActionLogService actionLogService;
+        private IRestaurantTablesService restaurantTablesService;
 
-        public OrderController(IUserService userService, IOrderService orderService, IProductService productService, IProductImageService productImageService, IActionLogService actionLogService)
+        public OrderController(IUserService userService, IOrderService orderService, IProductService productService, IProductImageService productImageService,
+            IActionLogService actionLogService, IRestaurantTablesService restaurantTablesService)
         {
             this.userService = userService;
             this.orderService = orderService;
             this.productService = productService;
             this.productImageService = productImageService;
             this.actionLogService = actionLogService;
+            this.restaurantTablesService = restaurantTablesService;
         }
 
         public ActionResult OrderList()
@@ -51,7 +54,13 @@ namespace Application.Controllers
         public JsonResult CompleteOrder(string orderId)
         {
             bool isSuccess = orderService.CompleteOrder(orderId);
-
+            var table = restaurantTablesService.GetRestTableByOrderId(orderId);
+            if (isSuccess && table != null)
+            {
+                table.OrderId = null;
+                table.IsOccupied = false;
+                restaurantTablesService.UpdateRestTable(table);
+            }
             return Json(new
             {
                 isSuccess = isSuccess
@@ -550,18 +559,18 @@ namespace Application.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
     }
-        class NextOrder
-        {
-            public decimal Id { get; set; }
-        }
-    
-        class SoldItemViewModel
-        {
-            public string ProductId { get; set; }
-            public string Title { get; set; }
-            public string PriceText { get; set; }
-            public Nullable<decimal> Price { get; set; }
-            public Nullable<decimal> Discount { get; set; }
-            public string PrimaryImageName { get; set; }
-        }
+    class NextOrder
+    {
+        public decimal Id { get; set; }
+    }
+
+    class SoldItemViewModel
+    {
+        public string ProductId { get; set; }
+        public string Title { get; set; }
+        public string PriceText { get; set; }
+        public Nullable<decimal> Price { get; set; }
+        public Nullable<decimal> Discount { get; set; }
+        public string PrimaryImageName { get; set; }
+    }
 }

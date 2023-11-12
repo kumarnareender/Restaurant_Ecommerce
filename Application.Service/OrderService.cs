@@ -83,6 +83,8 @@ namespace Application.Service
             {
                 order.OrderStatus = EOrderStatus.Completed.ToString();
                 order.StatusId = 7;
+                order.PaymentStatus = EPaymentStatus.Paid.ToString();
+                order.PaymentStatusId = 1;
                 orderRepository.Update(order);
                 Commit();
                 return true;

@@ -17,6 +17,7 @@ namespace Application.Service
         void DeleteRestTable(RestaurantTable restaurantTables);
         List<RestaurantTable> GetRestTablesList();
         RestaurantTable GetRestTable(int id);
+        RestaurantTable GetRestTableByOrderId(string orderId);
         void Commit();
     }
 
@@ -37,6 +38,12 @@ namespace Application.Service
         {
             this.repository.Add(restTable);
             Commit();
+        }
+        public RestaurantTable GetRestTableByOrderId(string orderId)
+        {
+            var RestTable = repository.Get(r => r.OrderId == orderId);
+            return RestTable;
+
         }
         public void UpdateRestTable(RestaurantTable restTable)
         {

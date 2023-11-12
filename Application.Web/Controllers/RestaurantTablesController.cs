@@ -7,6 +7,7 @@ using Stripe;
 using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Application.Controllers
@@ -138,6 +139,14 @@ namespace Application.Controllers
                 if (!table.IsOccupied)
                 {
                     table.OrderId = order.Id;
+                    if (order.OrderType != "Save")
+                    {
+                        order.OrderStatus = EOrderStatus.Completed.ToString();
+                        order.StatusId = 7;
+                        order.PaymentStatus = EPaymentStatus.Paid.ToString();
+                        order.PaymentStatusId = 1;
+
+                    }
                     orderService.CreateOrder(order);
                 }
                 else
@@ -145,14 +154,40 @@ namespace Application.Controllers
                     var updateOrder = orderService.GetOrder(table.OrderId);
 
 
-                    updateOrder.PayAmount += order.PayAmount - updateOrder.ShippingAmount;
-                    updateOrder.DueAmount += order.DueAmount;
+                    updateOrder.PayAmount = order.PayAmount;// - updateOrder.ShippingAmount;
+                    updateOrder.DueAmount = order.DueAmount;
                     updateOrder.ShippingAmount = order.ShippingAmount;
 
                     foreach (var item in order.OrderItems)
                     {
-                        updateOrder.OrderItems.Add(item);
+
+                        var orderItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId);
+
+                        if (orderItem != null)
+                        {
+                            orderItem.Quantity = item.Quantity;
+                            orderItem.CostPrice = item.CostPrice;
+                            orderItem.Discount = item.Discount;
+                            orderItem.Price = item.Price;
+                            orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
+
+                        }
+                        else
+                        {
+                            updateOrder.OrderItems.Add(item);
+                        }
+
                     }
+
+                    if (order.OrderType != "Save")
+                    {
+                        updateOrder.OrderStatus = EOrderStatus.Completed.ToString();
+                        updateOrder.StatusId = 7;
+                        order.PaymentStatus = EPaymentStatus.Paid.ToString();
+                        updateOrder.PaymentStatusId = 1;
+
+                    }
+
 
                     orderService.UpdateOrder(updateOrder);
                 }
@@ -207,55 +242,60 @@ namespace Application.Controllers
 
         }
 
-        public JsonResult GetOrderDetails(string orderId)
+        public JsonResult GetOrderDetailsByTableNumber(int tableId)
         {
             OrderViewModel orderVM = new OrderViewModel();
 
-            Model.Models.Order order = orderService.GetOrder(orderId);
-            if (order != null)
-            {
-                orderVM.Id = order.Id;
-                orderVM.UserId = order.UserId;
-                orderVM.BranchId = order.BranchId;
-                orderVM.OrderCode = order.OrderCode;
-                orderVM.OrderStatus = order.OrderStatus;
-                orderVM.OrderMode = order.OrderMode;
-                orderVM.PayAmount = order.PayAmount;
-                orderVM.Discount = order.Discount;
-                orderVM.Vat = order.Vat;
-                orderVM.ShippingAmount = order.ShippingAmount;
-                orderVM.DueAmount = order.DueAmount;
-                orderVM.ReceiveAmount = order.ReceiveAmount;
-                orderVM.ChangeAmount = order.ChangeAmount;
-                orderVM.TotalWeight = order.TotalWeight;
-                orderVM.DeliveryDate = order.DeliveryDate;
-                orderVM.DeliveryTime = order.DeliveryTime;
-                orderVM.IsFrozen = order.IsFrozen == null ? false : (bool)order.IsFrozen;
-                orderVM.ActionDate = order.ActionDate;
-                orderVM.OrderType = order.OrderType;
-                orderVM.StatusId = (int)order.StatusId;
-                orderVM.PaymentStatusId = order.PaymentStatusId;
-                orderVM.PaymentStatus = order.PaymentStatus;
-                orderVM.OrderItems = new List<ViewModel.OrderItemViewModel>();
-                foreach (Model.Models.OrderItem oi in order.OrderItems)
-                {
-                    string title = oi.ProductId == Guid.Empty.ToString() ? oi.Title : oi.Product.Title;
+            var table = restaurantTablesService.GetRestTable(tableId);
 
-                    OrderItemViewModel o = new ViewModel.OrderItemViewModel
+            if (table.IsOccupied)
+            {
+                Model.Models.Order order = orderService.GetOrder(table.OrderId);
+                if (order != null)
+                {
+                    orderVM.Id = order.Id;
+                    orderVM.UserId = order.UserId;
+                    orderVM.BranchId = order.BranchId;
+                    orderVM.OrderCode = order.OrderCode;
+                    orderVM.OrderStatus = order.OrderStatus;
+                    orderVM.OrderMode = order.OrderMode;
+                    orderVM.PayAmount = order.PayAmount;
+                    orderVM.Discount = order.Discount;
+                    orderVM.Vat = order.Vat;
+                    orderVM.ShippingAmount = order.ShippingAmount;
+                    orderVM.DueAmount = order.DueAmount;
+                    orderVM.ReceiveAmount = order.ReceiveAmount;
+                    orderVM.ChangeAmount = order.ChangeAmount;
+                    orderVM.TotalWeight = order.TotalWeight;
+                    orderVM.DeliveryDate = order.DeliveryDate;
+                    orderVM.DeliveryTime = order.DeliveryTime;
+                    orderVM.IsFrozen = order.IsFrozen == null ? false : (bool)order.IsFrozen;
+                    orderVM.ActionDate = order.ActionDate;
+                    orderVM.OrderType = order.OrderType;
+                    orderVM.StatusId = (int)order.StatusId;
+                    orderVM.PaymentStatusId = order.PaymentStatusId;
+                    orderVM.PaymentStatus = order.PaymentStatus;
+                    orderVM.OrderItems = new List<ViewModel.OrderItemViewModel>();
+                    foreach (Model.Models.OrderItem oi in order.OrderItems)
                     {
-                        Id = oi.Id,
-                        ProductId = oi.ProductId,
-                        ProductName = title,
-                        Price = oi.Price,
-                        Discount = oi.Discount,
-                        Quantity = oi.Quantity,
-                        CostPrice = oi.CostPrice == null ? oi.Price : (decimal)oi.CostPrice,
-                        ImageUrl = string.IsNullOrEmpty(oi.ImageUrl) ? "/Images/no-image.png" : oi.ImageUrl,
-                        ActionDate = oi.ActionDate,
-                        Color = oi.Color,
-                        Size = oi.Size
-                    };
-                    orderVM.OrderItems.Add(o);
+                        string title = oi.ProductId == Guid.Empty.ToString() ? oi.Title : oi.Product.Title;
+
+                        OrderItemViewModel o = new ViewModel.OrderItemViewModel
+                        {
+                            Id = oi.Id,
+                            ProductId = oi.ProductId,
+                            ProductName = title,
+                            Price = oi.Price,
+                            Discount = oi.Discount,
+                            Quantity = oi.Quantity,
+                            CostPrice = oi.CostPrice == null ? oi.Price : (decimal)oi.CostPrice,
+                            ImageUrl = string.IsNullOrEmpty(oi.ImageUrl) ? "/Images/no-image.png" : oi.ImageUrl,
+                            ActionDate = oi.ActionDate,
+                            Color = oi.Color,
+                            Size = oi.Size
+                        };
+                        orderVM.OrderItems.Add(o);
+                    }
                 }
             }
 
