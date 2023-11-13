@@ -793,6 +793,7 @@
     <Content Include="Scripts\Controller\Reports\PaymentReport.js" />
     <Content Include="Scripts\Controller\Reports\DailySalesChart.js" />
     <Content Include="Scripts\Controller\Reports\MonthlySalesChart.js" />
+    <Content Include="Scripts\Controller\RestaurantTable\RestTable.js" />
     <Content Include="Scripts\Controller\StockLocation\StockLocation.js" />
     <Content Include="Scripts\Controller\Lookup\Lookup.js" />
     <Content Include="Scripts\Controller\ItemType\ItemType.js" />
@@ -948,6 +949,7 @@
     <Content Include="Views\OrderPaymentStatus\paymentsOrderDetails.cshtml" />
     <Content Include="Views\Report\PaymentReport.cshtml" />
     <Content Include="Views\WholeSale\OrderConfirm.cshtml" />
+    <Content Include="Views\RestaurantTables\AddRestTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Fonts\glyphicons-halflings-regular.woff" />

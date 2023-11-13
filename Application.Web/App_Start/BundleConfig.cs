@@ -124,7 +124,8 @@ namespace Application.Web
                     "~/Scripts/Controller/PurchaseOrder/PurchaseOrderList.js",
                     "~/Scripts/Controller/PurchaseOrder/PurchaseOrderDetails.js",
                     "~/Scripts/Controller/OrderPaymentStatus/PaymentsOrderDetails.js",
-                    "~/Scripts/Controller/Reports/PaymentReport.js"
+                    "~/Scripts/Controller/Reports/PaymentReport.js",
+                    "~/Scripts/Controller/RestaurantTable/RestTable.js"
                    ));
 
             // Enable bundling 

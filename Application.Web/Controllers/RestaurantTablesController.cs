@@ -36,6 +36,54 @@ namespace Application.Controllers
             return View();
         }
 
+        public ActionResult AddRestTable()
+        {
+            return View();
+        }
+
+        public JsonResult CreateTable(RestaurantTable table)
+        {
+            bool isSuccess = true;
+            try
+            {
+                this.restaurantTablesService.CreateRestTable(table);
+            }
+            catch (Exception exp)
+            {
+                isSuccess = false;
+            }
+
+            return Json(new Result { IsSuccess = isSuccess }, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UpdateTable(RestaurantTable table)
+        {
+            bool isSuccess = true;
+            try
+            {
+                this.restaurantTablesService.UpdateRestTable(table);
+            }
+            catch (Exception exp)
+            {
+                isSuccess = false;
+            }
+
+            return Json(new Result { IsSuccess = isSuccess }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult DeleteTable(RestaurantTable table)
+        {
+            bool isSuccess = true;
+            try
+            {
+                this.restaurantTablesService.DeleteRestTable(table);
+            }
+            catch (Exception exp)
+            {
+                isSuccess = false;
+            }
+
+            return Json(new Result { IsSuccess = isSuccess }, JsonRequestBehavior.AllowGet);
+        }
         public string GetRestaurantTablesId(User userToSave)
         {
             string RestaurantTablesId = string.Empty;
@@ -241,6 +289,7 @@ namespace Application.Controllers
             return Json(restTables, JsonRequestBehavior.AllowGet);
 
         }
+
 
         public JsonResult GetOrderDetailsByTableNumber(int tableId)
         {
