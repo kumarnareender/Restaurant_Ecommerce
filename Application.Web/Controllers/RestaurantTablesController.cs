@@ -7,7 +7,9 @@ using Stripe;
 using Stripe.Checkout;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Application.Controllers
@@ -41,6 +43,119 @@ namespace Application.Controllers
             return View();
         }
 
+        [HttpPost]
+        public JsonResult SavePhoto(int tableId)
+        {
+            bool isSuccess = false;
+            //string message = String.Empty;
+
+            if (Request.Files == null || Request.Files[0] == null)
+            {
+                return Json(new
+                {
+                    isSuccess = false,
+                    message = "Please choose a user image!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            var table = restaurantTablesService.GetRestTable(tableId);
+
+            if (table.ImageUrl != null && table.ImageUrl != "")
+            {
+                string imagePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Grid/"), table.ImageUrl);
+
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                string imagePathOriginal = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Original/"), table.ImageUrl);
+
+                if (System.IO.File.Exists(imagePathOriginal))
+                {
+                    System.IO.File.Delete(imagePathOriginal);
+                }
+            }
+
+            var imageName = UploadImage(Request);
+            table.ImageUrl = imageName;
+
+            restaurantTablesService.UpdateRestTable(table);
+
+            // Check max limit reached
+            isSuccess = true;
+            //////bool isPrimaryImage = photoList.Count() == 0 ? true : false;
+            //isSuccess = AppUtils.SaveProductImage(productImageService, Request, productId, false, isPrimaryImage);
+
+            return Json(new
+            {
+                isSuccess
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        private string UploadImage(HttpRequestBase request)
+        {
+            string fileName = string.Empty;
+            foreach (string name in request.Files)
+            {
+                HttpPostedFileBase file = request.Files[name];
+
+                string originalFileName = file.FileName;
+                string fileExtension = Path.GetExtension(originalFileName);
+                string aboutUsImageId = Guid.NewGuid().ToString();
+
+                fileName = aboutUsImageId + ".jpg";
+                string imagePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Original/"), fileName);
+
+                if (!Directory.Exists(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Original/")))
+                {
+                    Directory.CreateDirectory(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Original/"));
+                }
+
+                // Save photo
+                file.SaveAs(imagePath);
+
+                // Saving photo in different sizes
+                string imageSource = string.Empty;
+                string imageDest = string.Empty;
+
+                // Small
+                //imageSource = imagePath;
+                //imageDest = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/ProductImages/Small/"), fileName);
+                //ImageResizer.Resize_AspectRatio(imageDest, imageSource, 140, 140);
+
+                // Medium
+                //imageSource = imagePath;
+                //imageDest = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/ProductImages/AboutUs/"), fileName);
+                //ImageResizer.Resize_AspectRatio(imageDest, imageSource, 200, 200);
+
+                // Large
+                //imageSource = imagePath;
+                //imageDest = Path.Combine(HttpContext.Current.Server.MapPath("~/ProductImages/Large/"), fileName);
+                //ImageResizer.Resize_AspectRatio(imageDest, imageSource, 650, 650);
+
+                // XLarge
+                //imageSource = imagePath;
+                //imageDest = Path.Combine(HttpContext.Current.Server.MapPath("~/ProductImages/XLarge/"), fileName);
+                //ImageResizer.Resize_AspectRatio(imageDest, imageSource, 800, 800);
+
+                // Home page grid
+                imageSource = imagePath;
+
+                if (!Directory.Exists(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Grid/")))
+                {
+                    Directory.CreateDirectory(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Grid/"));
+                }
+
+                imageDest = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Grid/"), fileName);
+                ImageResizer.Resize_AspectRatio(imageDest, imageSource, 250, 250);
+
+                // Save records to db
+            }
+            return fileName;
+        }
+
         public JsonResult CreateTable(RestaurantTable table)
         {
             bool isSuccess = true;
@@ -53,7 +168,7 @@ namespace Application.Controllers
                 isSuccess = false;
             }
 
-            return Json(new Result { IsSuccess = isSuccess }, JsonRequestBehavior.AllowGet);
+            return Json(new Result { IsSuccess = isSuccess, Data = table.Id }, JsonRequestBehavior.AllowGet);
         }
         public JsonResult UpdateTable(RestaurantTable table)
         {
@@ -75,6 +190,23 @@ namespace Application.Controllers
             bool isSuccess = true;
             try
             {
+                if (table.ImageUrl != null && table.ImageUrl != "")
+                {
+                    string imagePath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Grid/"), table.ImageUrl);
+
+
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                    }
+
+                    string imagePathOriginal = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/TableImages/Original/"), table.ImageUrl);
+
+                    if (System.IO.File.Exists(imagePathOriginal))
+                    {
+                        System.IO.File.Delete(imagePathOriginal);
+                    }
+                }
                 this.restaurantTablesService.DeleteRestTable(table);
             }
             catch (Exception exp)
@@ -148,7 +280,7 @@ namespace Application.Controllers
             //Model.Models.Order order = new Model.Models.Order();
             //return null;
 
-            var table = restaurantTablesService.GetRestTable(order.TableNumber.Value);
+            var table = restaurantTablesService.GetRestTableByTableNumber(order.TableNumber.Value);
 
             string branchName = Utils.GetSetting("CompanyName");
             Branch branch = branchService.GetBranchByName(branchName);
@@ -276,10 +408,13 @@ namespace Application.Controllers
                 string imageSrcPrefix = Utils.GetTableImageSrcPrefix() + "/Grid/";
                 restTables = restaurantTablesService.GetRestTablesList();
 
-                foreach (var item in restTables)
-                {
-                    item.ImageUrl = imageSrcPrefix + item.ImageUrl;
-                }
+                //foreach (var item in restTables)
+                //{
+                //    if (item.ImageUrl != null && item.ImageUrl != "")
+                //    {
+                //        item.ImageUrl = imageSrcPrefix + item.ImageUrl;
+                //    }
+                //}
 
             }
             catch (Exception ex)
@@ -295,7 +430,7 @@ namespace Application.Controllers
         {
             OrderViewModel orderVM = new OrderViewModel();
 
-            var table = restaurantTablesService.GetRestTable(tableId);
+            var table = restaurantTablesService.GetRestTableByTableNumber(tableId);
 
             if (table.IsOccupied)
             {

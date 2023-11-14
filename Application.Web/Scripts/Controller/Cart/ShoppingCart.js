@@ -1,14 +1,33 @@
 ﻿$(document).ready(function () {
 
 
-    let appType = $("#appType").val();
-    if (appType == "Restaurant") {
-        //$("#shopping-cart").hide();
-        //$("#cart-amount-calculation").hide();
-        $(".desiDiv").hide();
-        $("#restaurant-div").show();
-        $(".btnRestaurant").show();
+
+    //let appType = $("#appType").val();
+    //if (appType == "Restaurant") {
+    //$("#shopping-cart").hide();
+    //$("#cart-amount-calculation").hide();
+    $(".desiDiv").hide();
+    $("#restaurant-div").show();
+    $(".btnRestaurant").show();
+    //}
+
+
+    var tableNumber = getParam('tableNumber');
+
+    if (tableNumber != null && tableNumber != "") {
+        localStorage.setItem("tableNumber", tableNumber);
+        GetOrderByTableNumber(tableNumber);
+        $(".hideDiv").hide();
     }
+
+    let localTableNumber = localStorage.getItem("tableNumber");
+    if (localTableNumber != null && localTableNumber != "" && (tableNumber == null || tableNumber == "")) {
+        GetOrderByTableNumber(tableNumber);
+
+        $(".hideDiv").hide();
+    }
+
+
 
     getUserInformation();
     //builtShoppingCartItems();
@@ -63,6 +82,15 @@
         //    //return;
         //}
 
+        GetOrderByTableNumber(dataid);
+
+
+        //console.log("CheckboxId: ", id);
+        //console.log("CheckboxId-dataid: ", dataid);
+    });
+
+    function GetOrderByTableNumber(dataid) {
+
         $.ajax({
             dataType: "json",
             url: '/RestaurantTables/GetOrderDetailsByTableNumber',
@@ -90,12 +118,7 @@
                 $('.item-loading').hide();
             }
         });
-
-
-
-        //console.log("CheckboxId: ", id);
-        //console.log("CheckboxId-dataid: ", dataid);
-    });
+    }
 
     $('#btnClearCart').click(function () {
 
@@ -104,7 +127,10 @@
             function (result) {
                 if (result) {
                     clearCart();
+                    localStorage.setItem("tableNumber", "");
+                    $(".hideDiv").show();
                     builtShoppingCartItems();
+
                 }
             });
 
@@ -428,7 +454,7 @@
 
         showLoader();
 
-        if ($("._tables:checked").val() == null || $("._tables:checked").val() == undefined) {
+        if ((localTableNumber == "" || localTableNumber == null) && ($("._tables:checked").val() == null || $("._tables:checked").val() == undefined)) {
             bootbox.alert("<h4>Please select table first!</h4>", function () { });
             return;
         }
@@ -437,7 +463,7 @@
 
 
         let order = {
-            TableNumber: $("._tables:checked").val(),
+            TableNumber: localTableNumber != "" ? localTableNumber : $("._tables:checked").val(),
             OrderType: orderType
         }
 
@@ -482,7 +508,7 @@
         //$("#order-type-shopping-cart").val();
 
         order.OrderStatus = 'Processing';
-        //order.PaymentStatus = 'Pending';
+        order.PaymentStatus = 'Pending';
         //order.PaymentType = paymentType;//isCOD === true ? 'COD' : 'Card';
         //order.Ordertype = $('input[name="Ordertype"]:checked').val();
 
@@ -508,8 +534,10 @@
                 if (data.isSuccess) {
 
                     bootbox.alert("<h4>Your order has been saved!</h4>", function () { });
-
                     clearCart();
+                    localStorage.setItem("tableNumber", "");
+                    $(".hideDiv").show();
+
 
                     //if (order.OrderMode == "Wholesale") {
                     //    window.location.href = '/Wholesale/OrderConfirm?orderCode=' + data.orderCode;
@@ -517,7 +545,9 @@
                     //}
 
                     //if (paymentType != "Online") {
-                    window.location.href = '/Customer/OrderConfirm?orderCode=' + data.orderCode;
+                    //window.location.href = '/Customer/OrderConfirm?orderCode=' + data.orderCode;
+                    window.location.href = '/Order/OrderList';
+
                     //}
                     //else {
                     //    proceedToCardPayment(data.orderId, data.orderCode, grandTotal);
@@ -954,19 +984,19 @@ function getUserInformation() {
 
 
                                 $('#homepage-container-table').append(
-                                    '<div class="grid-item tables-click" data-id="' + recordSet[i].Id + '"> ' +
+                                    '<div class="grid-item tables-click" data-id="' + recordSet[i].TableNumber + '"> ' +
                                     '<div class="div-item-container">' +
                                     //'<a class="item-link-container" href="' + link + '"> ' +
                                     '<div class="grid-item-image"> ' +
-                                    '<img src="' + recordSet[i].ImageUrl + '" /> ' +
+                                    '<img src="/TableImages/Grid/' + recordSet[i].ImageUrl + '" /> ' +
                                     '</div> ' +
                                     '<div class="grid-item-info" style=" margin-top: 20px; padding-left: 55px; "> ' +
 
                                     '<label class="checkbox-container" >'
                                     + '<span ' + (recordSet[i].IsOccupied ? 'style="color:red;"' : '') + '> ' + recordSet[i].TableNumber + '</span>'
                                     //+ '<div class="col-sm-4"> <img alt="" style="width:90px;" src="' + recordSet[i].ImageUrl + '" /> </div></div>'
-                                    + '<input class="_tables" type="checkbox" value="' + recordSet[i].Id + '" id="_table' + recordSet[i].Id + '">'
-                                    + '<span class="checkmark" data-id="' + recordSet[i].Id + '" ></span >'
+                                    + '<input class="_tables" type="checkbox" value="' + recordSet[i].TableNumber + '" id="_table' + recordSet[i].TableNumber + '">'
+                                    + '<span class="checkmark" data-id="' + recordSet[i].TableNumber + '" ></span >'
                                     + '</label >' +
 
                                     //'<span class="h-p-title center">' + recordSet[i].TableNumber + '</span> ' +

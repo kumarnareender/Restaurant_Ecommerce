@@ -22,6 +22,12 @@ namespace Application.Web.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult Index()
+        {
+            return View("Login");
+        }
+
+        [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;

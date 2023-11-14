@@ -15,6 +15,7 @@
                     var record = [];
                     record.push(recordSet[i].Id);
                     record.push(recordSet[i].OrderCode);
+                    record.push(recordSet[i].TableNumber);
                     record.push(siteCurrency() + recordSet[i].PayAmount.toFixed(2));
                     record.push(recordSet[i].OrderMode);
                     record.push(recordSet[i].OrderStatus);
@@ -101,6 +102,7 @@ app.controller('AdminOrderListCtrl', ['$rootScope', '$scope', '$http', '$filter'
                 "columns": [
                     { "title": "Delete", "class": "center" },
                     { "title": "Order Code", "class": "center" },
+                    { "title": "Table Number", "class": "right" },
                     { "title": "Grand Total", "class": "right" },
                     { "title": "Order Mode", "class": "center" },
                     { "title": "Order Status", "class": "center" },
@@ -124,12 +126,12 @@ app.controller('AdminOrderListCtrl', ['$rootScope', '$scope', '$http', '$filter'
                     {
                         "aTargets": [1],
                         "mRender": function (data, type, row) {
-                            var text = '<a href=/Order/OrderDetails?orderId=' + row[0] + '>' + row[1] + '</a>';
+                            var text = '<a href=/Cart/Index?tableNumber=' + row[2] + '>' + row[1] + '</a>';
                             return $("<div/>").append(text).html();
                         }
                     },
                     {
-                        "aTargets": [8],
+                        "aTargets": [9],
                         "bSortable": false,
                         "mRender": function (data, type, row) {
                             var text = '<a id=' + row[0] + ' class="btn btn-success btn-order-complete">Complete</a>';

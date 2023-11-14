@@ -17,6 +17,7 @@ namespace Application.Service
         void DeleteRestTable(RestaurantTable restaurantTables);
         List<RestaurantTable> GetRestTablesList();
         RestaurantTable GetRestTable(int id);
+        RestaurantTable GetRestTableByTableNumber(int tableNumber);
         RestaurantTable GetRestTableByOrderId(string orderId);
         void Commit();
     }
@@ -67,6 +68,11 @@ namespace Application.Service
             return RestTable;
         }
 
+        public RestaurantTable GetRestTableByTableNumber(int tableNumber)
+        {
+            var RestTable = repository.Get(r => r.TableNumber == tableNumber);
+            return RestTable;
+        }
         public void Commit()
         {
             unitOfWork.Commit();

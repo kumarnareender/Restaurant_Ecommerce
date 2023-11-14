@@ -110,7 +110,7 @@ namespace Application.Controllers
                     order.Vat = item.Vat;
                     order.ActionDate = item.ActionDate;
                     order.ActionDateString = Utils.GetFormattedDate(item.ActionDate);
-
+                    order.TableNumber = item.TableNumber != null ? item.TableNumber.Value:0;
                     orderVMList.Add(order);
                 }
             }

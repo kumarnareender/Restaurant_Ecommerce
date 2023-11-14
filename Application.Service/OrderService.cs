@@ -161,7 +161,7 @@ namespace Application.Service
                     orders = orderRepository.GetMany(r => r.OrderStatus.ToLower() == orderStatus.ToLower() && r.OrderMode.ToLower() == orderMode.ToString().ToLower() && r.ActionDate >= fromDate && r.ActionDate <= toDate).OrderByDescending(r => r.ActionDate).ToList();
                 }
             }
-
+            orders = orders.Where(x => x.OrderMode == "RestaurantOrder").ToList();
             return orders;
         }
 
