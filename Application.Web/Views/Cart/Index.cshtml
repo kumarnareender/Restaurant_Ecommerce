@@ -88,16 +88,17 @@
     <div class="item-loading">
         <img src="~/Images/ajax-loader.gif" /> Loading...
     </div>
+    <div style="" id="shopping-cart">
+        <div class="shopping-cart-container"></div>
+        <div class="shopping-cart-buttons" style="padding: 10px; background-color: #f2f2f2; border:1px solid #dcdcdc; border-top:0;">
+            <button id="btnUpdateCart" style="float:right; margin-left:10px;" class="btn btn-primary">Update Cart</button>
+            &nbsp;<button id="btnClearCart" style="float:right;" class="btn btn-default">Clear Cart</button>
+            <a href="/Home" class="btn btn-warning btn-continue-shopping" style="background-color: #FA2D18 ">Continue Shopping</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-8">
-            <div style="" id="shopping-cart">
-                <div class="shopping-cart-container"></div>
-                <div class="shopping-cart-buttons" style="padding: 10px; background-color: #f2f2f2; border:1px solid #dcdcdc; border-top:0;">
-                    <button id="btnUpdateCart" style="float:right; margin-left:10px;" class="btn btn-primary">Update Cart</button>
-                    &nbsp;<button id="btnClearCart" style="float:right;" class="btn btn-default">Clear Cart</button>
-                    <a href="/Home" class="btn btn-warning btn-continue-shopping" style="background-color: #FA2D18 ">Continue Shopping</a>
-                </div>
-            </div>
+
             <div id="customer-address-section" class="customer-address" style="margin-top:20px; background-color: #fff; border:1px solid #dcdcdc;">
                 <div style="border-bottom: 1px solid #dcdcdc; padding: 10px; background-color: #f2f2f2; ">
                     <span style="font-weight:600;">My Address</span>
@@ -209,6 +210,11 @@
                             <div class="col-sm-2 btnRestaurant" style="display:none;">
                                 <button id="btnCompleteRestOrder" class="btn btn-danger theme-back-color btnSaveRestOrder" data-id="Complete" style="width:80%; margin-left:50px;">Complete</button>
                             </div>
+
+                            <div id="order-loader" style="float: right; position: relative; top: 4px; font-size: 14px; font-weight: 600; display: none;">
+                                <img src="~/Images/ajax_loader_blue_32.gif" />
+                                <span>Order is Processing...</span>
+                            </div>
                         </div>
                     </div>
 
@@ -216,7 +222,10 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div id="cart-amount-calculation">
+            <div id="cart-amount-calculation" style="margin-top:20px; background-color: #fff; border:1px solid #dcdcdc;">
+                <div style="border-bottom: 1px solid #dcdcdc; padding: 10px; background-color: #f2f2f2; ">
+                    <span style="font-weight:600;">Calculation Amount</span>
+                </div>
                 <div style="padding:10px; background-color:#fff; border:1px solid #dcdcdc; font-size:14px;">
                     <table class="tbl-checkout-total">
                         <tr>

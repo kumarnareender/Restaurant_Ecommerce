@@ -85,6 +85,11 @@ app.factory('homePageService', [
 // CONTROLLER
 app.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$filter', '$location', 'Enum', 'homePageService', function ($rootScope, $scope, $http, $filter, $location, Enum, homePageService) {
 
+    var tableNumber = getParam('tableNumber');
+    if (tableNumber != null && tableNumber != "" && tableNumber != undefined) {
+        localStorage.setItem("tableNumber", tableNumber);
+    }
+
     loadSliderImageList();
 
     renderLeftCategories();
@@ -372,7 +377,7 @@ app.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$filter', '$locati
                     $('#homepage-container-popular').append(
                         '<div class="grid-item"> ' +
                         '<div class="div-item-container clearfix">' +
-                        '<a class="item-link-container clearfix" href="' + link+'"> ' +
+                        '<a class="item-link-container clearfix" href="' + link + '"> ' +
                         '<div class="grid-item-image"> ' +
                         '<img src="' + productList[i].PrimaryImageName + '" /> ' +
                         '</div> ' +
@@ -451,7 +456,7 @@ app.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$filter', '$locati
                     $('#homepage-container-newarrival').append(
                         '<div class="grid-item"> ' +
                         '<div class="div-item-container">' +
-                        '<a class="item-link-container" href="' + link+'"> ' +
+                        '<a class="item-link-container" href="' + link + '"> ' +
                         '<div class="grid-item-image"> ' +
                         '<img src="' + productList[i].PrimaryImageName + '" /> ' +
                         '</div> ' +

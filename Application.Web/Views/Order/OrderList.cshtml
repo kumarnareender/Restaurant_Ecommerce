@@ -4,42 +4,43 @@
 }
 
 <style type="text/css">
-    .order-mode{
+    .order-mode {
         border: 1px solid #dcdcdc;
         padding: 10px;
-        margin-right:5px;
+        margin-right: 5px;
     }
-    .order-mode-active{
+
+    .order-mode-active {
         background-color: #f2f2f2;
         font-weight: 600;
     }
 </style>
 
 @*<div class="page-banner no-subtitle">
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Order List &nbsp; <span id="order-status"></span></h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Order List &nbsp; <span id="order-status"></span></h2>
+            </div>
+            <div class="col-md-6">
+                <ul class="breadcrumbs">
+                    <li><a href="#">My Orders</a></li>
+                    <li>Order List</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-6">
-            <ul class="breadcrumbs">
-                <li><a href="#">My Orders</a></li>
-                <li>Order List</li>
-            </ul>
-        </div>
-    </div>
-</div>*@
+    </div>*@
 
 <form name="myForm" novalidate>
     <div ng-controller="AdminOrderListCtrl" class="form-horizontal">
-         
+
         <div style="border: 1px solid #dcdcdc; padding-top: 20px; padding-bottom:20px;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-4 control-label">Branch</label>
                             <div class="col-sm-8">
-                                <select id="branch" name="branch" class="form-control form-group-margin">
+                                <select id="branch" name="branch" class="form-control hidden form-group-margin">
                                     <option value="">All Branches</option>
                                 </select>
                             </div>
@@ -79,12 +80,12 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-4 control-label">Order Mode</label>
                             <div class="col-sm-8">
                                 <div class="input-group" style="width:100%;">
                                     <select class="form-control" name="orderMode" id="orderMode">
-                                        <option value="">All</option>                                        
+                                        <option value="">All</option>
                                         <option value="Online">Online</option>
                                     </select>
                                 </div>
@@ -116,14 +117,14 @@
         </div>
 
         @*<br />
-        <div class="row">
-            <div class="col-md-12">
-                <a id="All" class="order-mode" href="#">All</a>
-                <a id="Store" class="order-mode" href="#">Store</a>
-                <a id="Online" class="order-mode" href="#">Online</a>
-                <a id="PhoneOrder" class="order-mode" href="#">Phone Order</a>
-            </div>
-        </div>*@
+            <div class="row">
+                <div class="col-md-12">
+                    <a id="All" class="order-mode" href="#">All</a>
+                    <a id="Store" class="order-mode" href="#">Store</a>
+                    <a id="Online" class="order-mode" href="#">Online</a>
+                    <a id="PhoneOrder" class="order-mode" href="#">Phone Order</a>
+                </div>
+            </div>*@
         <div class="row">
             <div class="col-sm-12">
                 <div class="item-loading">

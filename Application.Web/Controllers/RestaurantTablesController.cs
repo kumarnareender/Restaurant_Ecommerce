@@ -314,6 +314,7 @@ namespace Application.Controllers
                     item.Id = Guid.NewGuid().ToString();
                     item.ActionDate = DateTime.Now;
                     item.CostPrice = item.Price;
+                    item.Printed = false;
                     //item.CostPrice = purchaseOrderService.price(item.ProductId);
                 }
                 if (!table.IsOccupied)
@@ -349,8 +350,9 @@ namespace Application.Controllers
                             orderItem.CostPrice = item.CostPrice;
                             orderItem.Discount = item.Discount;
                             orderItem.Price = item.Price;
+                            orderItem.Printed = false;
                             orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
-
+                            orderItem.Description = item.Description;
                         }
                         else
                         {
@@ -476,7 +478,8 @@ namespace Application.Controllers
                             ImageUrl = string.IsNullOrEmpty(oi.ImageUrl) ? "/Images/no-image.png" : oi.ImageUrl,
                             ActionDate = oi.ActionDate,
                             Color = oi.Color,
-                            Size = oi.Size
+                            Size = oi.Size,
+                            Description = oi.Description
                         };
                         orderVM.OrderItems.Add(o);
                     }

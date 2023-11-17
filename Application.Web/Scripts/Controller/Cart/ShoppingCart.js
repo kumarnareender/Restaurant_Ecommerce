@@ -22,11 +22,11 @@
 
     let localTableNumber = localStorage.getItem("tableNumber");
     if (localTableNumber != null && localTableNumber != "" && (tableNumber == null || tableNumber == "")) {
-        GetOrderByTableNumber(tableNumber);
+        GetOrderByTableNumber(localTableNumber);
 
         $(".hideDiv").hide();
     }
-
+    $("#cart-text").text("Table Number: " + localTableNumber);
 
 
     getUserInformation();
@@ -81,8 +81,9 @@
         $("#_table" + dataid).prop("checked", true);
         //    //return;
         //}
-
-        GetOrderByTableNumber(dataid);
+        $("#cart-text").text("Table Number: " + dataid);
+        $("#myModal").modal('hide');
+        //GetOrderByTableNumber(dataid);
 
 
         //console.log("CheckboxId: ", id);
@@ -104,7 +105,7 @@
                     if (recordSet.OrderItems.length > 0) {
                         for (let i = 0; i < recordSet.OrderItems.length; i++) {
                             productIds.push(recordSet.OrderItems[i].ProductId);
-                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0);
+                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description);
                         }
 
                     }
@@ -480,7 +481,7 @@
         var grandTotal = 0;
 
         for (var i = 0; i < cart.length; i++) {
-
+            var descriptionInputBoxId = '#txtDescription_' + cart[i].Id;
             var orderItem = {};
 
             var price = parseFloat(cart[i].OnlinePrice, 10);
@@ -494,6 +495,7 @@
             orderItem.ImageUrl = cart[i].ImageUrl;
             orderItem.Color = cart[i].Color;
             orderItem.Size = cart[i].Size;
+            orderItem.Description = $(descriptionInputBoxId).val();
 
             order.OrderItems.push(orderItem);
             totalAmount += orderItem.TotalPrice;
@@ -521,7 +523,7 @@
         //order.CustomerId = $("#wholesale-customer").val()
 
 
-
+        $("#rest-order-loader").show();
 
         // Saving Records
         $.ajax({
@@ -546,15 +548,16 @@
 
                     //if (paymentType != "Online") {
                     //window.location.href = '/Customer/OrderConfirm?orderCode=' + data.orderCode;
-                    window.location.href = '/Order/OrderList';
+                    window.location.href = '/Home/Index';
 
                     //}
                     //else {
                     //    proceedToCardPayment(data.orderId, data.orderCode, grandTotal);
                     //}
+                    $("#rest-order-loader").hide();
                 }
                 else {
-                    hideLoader();
+                    //hideLoader();
                     bootbox.alert("<h4>Failed to place your order!</h4>", function () { });
                 }
 
@@ -829,7 +832,7 @@ function getUserInformation() {
                                     let newGrandTotal = grandTotal;
 
                                     if (orderType == 'Wholesale') {
-                                        $("#cart-text").text("Shopping Cart - " + orderType + " Order");
+                                        //$("#cart-text").text("Shopping Cart - " + orderType + " Order");
                                         $("#wholesale-customer-div").removeClass('hide');//addClass("d-none");
                                         $("#purchase-supplier-div").addClass('hide');
                                         $("#btnPlaceOrder").removeClass('hide');
@@ -838,7 +841,7 @@ function getUserInformation() {
                                         newGrandTotal = grandTotal + shippingCharges;
                                     }
                                     else if (orderType == 'Purchase') {
-                                        $("#cart-text").text("Shopping Cart - " + orderType + " Order");
+                                        //$("#cart-text").text("Shopping Cart - " + orderType + " Order");
                                         $("#wholesale-customer-div").addClass('hide');//remvoeClass("d-none");
                                         $("#purchase-supplier-div").removeClass('hide');
                                         $("#btnPlaceOrder").addClass('hide');
@@ -848,7 +851,7 @@ function getUserInformation() {
                                         $("#btnUpdateAddress").addClass('hide');
 
                                     } else {
-                                        $("#cart-text").text("Shopping Cart - Online Order");
+                                        /*$("#cart-text").text("Shopping Cart - Online Order");*/
                                         $("#wholesale-customer-div").addClass('hide');//remvoeClass("d-none");
                                         $("#purchase-supplier-div").addClass('hide');
 
@@ -984,7 +987,7 @@ function getUserInformation() {
 
 
                                 $('#homepage-container-table').append(
-                                    '<div class="grid-item tables-click" data-id="' + recordSet[i].TableNumber + '"> ' +
+                                    '<div class="grid-item ' + (recordSet[i].IsOccupied ? '' : 'tables-click') + '" data-id="' + recordSet[i].TableNumber + '"> ' +
                                     '<div class="div-item-container">' +
                                     //'<a class="item-link-container" href="' + link + '"> ' +
                                     '<div class="grid-item-image"> ' +
@@ -1066,6 +1069,7 @@ function builtShoppingCartItems() {
     html += '<tr class="shopping-cart-header">';
     html += '<td>Image</td>';
     html += '<td>Name</td>';
+    html += '<td>Description</td>';
     html += '<td class="center">Price</td>';
     html += '<td class="center">Qty</td>';
     html += '<td class="center">Discount</td>';
@@ -1078,6 +1082,20 @@ function builtShoppingCartItems() {
 
         var itemTotal = (parseFloat(cart[i].OnlinePrice - cart[i].Discount, 10) * parseInt(cart[i].Quantity, 10));
         var quantityInputBoxId = 'txtQty_' + cart[i].Id;
+        var descriptionInputBoxId = 'txtDescription_' + cart[i].Id;
+
+        let isExist = false;
+        let productIds = window.localStorage.getItem("productIds");
+        if (productIds != null && productIds != '') {
+            productIds = productIds.split(",");
+
+            if (productIds.find((element) => element == cart[i].Id)) {
+                isExist = true;
+            }
+        }
+
+
+
 
         html += '<tr>';
 
@@ -1085,8 +1103,13 @@ function builtShoppingCartItems() {
         html += '<img src="' + cart[i].ImageUrl + '" />';
         html += '</td>';
 
+        html += '<td ' + (isExist ? 'style=" background-color: bisque; "' : '') + '>';
+        //html += '<a href="/Product/Details?id=' + cart[i].Id + '">' + cart[i].Name + '</a>';
+        html += '<a">' + cart[i].Name + '</a>';
+        html += '</td>';
+
         html += '<td>';
-        html += '<a href="/Product/Details?id=' + cart[i].Id + '">' + cart[i].Name + '</a>';
+        html += '<input type="text" class="form-control" style="width:100%;" value="' + cart[i].Description + '" id="' + descriptionInputBoxId + '" />';
         html += '</td>';
 
         html += '<td class="center">';

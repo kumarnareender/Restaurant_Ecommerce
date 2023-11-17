@@ -60,5 +60,6 @@ namespace Application.ViewModel
         public int ReceivedQuantity { get; set; }
         public string Color { get; set; }
         public string Size { get; set; }
+        public string Description { get; set; }
     }
 }

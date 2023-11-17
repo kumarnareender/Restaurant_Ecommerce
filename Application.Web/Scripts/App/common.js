@@ -59,7 +59,7 @@ function getSummaryAmount() {
     return obj;
 }
 
-function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '') {
+function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '', description = '') {
 
     var cart = getCart();
 
@@ -85,7 +85,7 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
     if (!isAdded) {
         cart.push({
             Id: productId, Name: name, Quantity: quantity, OnlinePrice: price, ImageUrl: imageUrl, Gst: gst, Discount: discount,
-            Size: size, Color: color
+            Size: size, Color: color, Description: description
         });
     }
 

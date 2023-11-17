@@ -19,5 +19,7 @@ namespace Application.Model.Models
         public virtual Product Product { get; set; }
         public string Color { get; set; }
         public string Size { get; set; }
+        public Nullable<bool> Printed { get; set; }
+        public string Description { get; set; }
     }
 }
