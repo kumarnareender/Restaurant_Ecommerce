@@ -345,11 +345,28 @@
                                     {{color.Color}}
                                 </label>-->
                             </div>
+                            <br />
+
+                            <div id="choice">
+                                <span style="font-size: 15px;">Choice:</span>
+                                <label ng-repeat="choice in product.Choices | orderBy:'Name':false" class="padd-left-10">
+                                    <input id="choice_{{choice.Id}}" type="checkbox" class="form-check-input choices"  value="{{choice.Name}}" ng-click="clickChoice(choice.Id)" required>
+                                    {{choice.Name}}
+                                </label>
+                            </div>
+                            <br />
+
+                            <div id="option">
+                                <span style="font-size: 15px;">Options:</span>
+                                <label ng-repeat="option in product.Options | orderBy:'Name':false" class="padd-left-10">
+                                    <input id="rbSize" type="radio" name="option" class="form-check-input options" checked="checked" value="{{option}}" ng-click="clickOption(option)" required>
+                                    {{option}}
+                                </label>
+                            </div>
 
                             <br />
 
                             <div>
-                                le
                                 <span style="font-size: 15px;">Quantity</span>
                                 <div style="padding-top:5px;">
                                     <button id="btnMinus" class="btn btn-default" style=" float:left;">-</button>
@@ -369,12 +386,9 @@
                                 </a>
                             </div>
                             <br />
-                            <div style="border-top:1px solid #dcdcdc;padding-top:20px; margin-top:10px;">
-                                <span style="font-size:14px;">To order by phone, Please Call:</span>
-                                <h2 class="icon-phone-2" style="color: #e53e3e;">
-                                    @{var hotLine = Application.Common.Utils.GetHotlineNumber(); @hotLine;}
-                                </h2>
-                            </div>
+                            @*<div style="border-top:1px solid #dcdcdc;padding-top:20px; margin-top:10px;">
+
+                                </div>*@
                         </div>
                         <br />
 

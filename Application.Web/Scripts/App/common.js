@@ -59,7 +59,7 @@ function getSummaryAmount() {
     return obj;
 }
 
-function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '', description = '') {
+function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '', description = '', option = '') {
 
     var cart = getCart();
 
@@ -70,7 +70,7 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
     var isAdded = false;
 
     for (var i = 0; i < cart.length; i++) {
-        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size) {
+        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size && cart[i].Option == option) {
             cart[i].Quantity = parseInt(cart[i].Quantity, 10) + parseInt(quantity, 10);
             cart[i].OnlinePrice = parseInt(price, 10);
             cart[i].Discount = parseInt(discount, 10);
@@ -85,7 +85,7 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
     if (!isAdded) {
         cart.push({
             Id: productId, Name: name, Quantity: quantity, OnlinePrice: price, ImageUrl: imageUrl, Gst: gst, Discount: discount,
-            Size: size, Color: color, Description: description
+            Size: size, Color: color, Description: description, Option:option
         });
     }
 

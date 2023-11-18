@@ -16,6 +16,7 @@ namespace Application.Web
 
         public static List<ColorViewModel> Colors { get; set; }
         public static List<SizeViewModel> Sizes { get; set; }
+        public static List<ProductChoiceViewModel> Choices { get; set; }
 
         public static UserViewModel GetLoggedInUserInfo(User user)
         {
@@ -278,11 +279,13 @@ namespace Application.Web
         {
             string sqlColor = "Select Id, ProductId, Color from ProductColor";
             string sqlSize = "Select Id, ProductId, Size from ProductSize";
+            string sqlProductChoice = "select Id,ProductId from ProductChoice";
+
             using (Data.Models.ApplicationEntities context = new Data.Models.ApplicationEntities())
             {
-
                 Colors = context.Database.SqlQuery<ColorViewModel>(sqlColor).ToList();
                 Sizes = context.Database.SqlQuery<SizeViewModel>(sqlSize).ToList();
+                Choices = context.Database.SqlQuery<ProductChoiceViewModel>(sqlProductChoice).ToList();
             }
         }
 
@@ -297,8 +300,8 @@ namespace Application.Web
 
                 int colorCount = Colors.Where(x => x.ProductId == item.Id).Count();
                 int sizeCount = Sizes.Where(x => x.ProductId == item.Id).Count();
-
-                if (colorCount != 0 || sizeCount != 0)
+                int choices = Choices.Where(x => x.ProductId == item.Id).Count();
+                if (colorCount != 0 || sizeCount != 0 || choices != 0)
                 {
                     item.IsSizeColorAvailable = true;
                 }

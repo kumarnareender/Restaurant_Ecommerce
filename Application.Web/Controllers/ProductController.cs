@@ -103,7 +103,7 @@ namespace Application.Controllers
                 pvm.OnlinePrice = newPrice;
                 pvm.PriceText = priceText;
                 pvm.PriceTextOld = oldPriceText;
-
+                pvm.Options = product.Option != null ? product.Option.Split(',') : new string[0];
                 // Product images
                 pvm.ImageList = new List<ProductImageViewModel>();
                 IEnumerable<ProductImage> imageList = productImageService.GetProductImages(product.Id);
@@ -209,21 +209,25 @@ namespace Application.Controllers
                 string sqlColor = $"Select Id, ProductId, Color from ProductColor where ProductId = '{product.Id}'";
                 string sqlSize = $"Select Id, ProductId, Size from ProductSize where ProductId = '{product.Id}'";
                 string sqlSizeColor = $"Select Id, ProductId, Size, Color, Price from ProductSizeColor where ProductId = '{product.Id}'";
+                string sqlProductChoice = $"select c.Id, c.Name, c.Amount from ProductChoice pc inner join Choice c on pc.ChoiceId = c.Id where pc.ProductId = '{product.Id}'";
 
                 List<ColorViewModel> colors = new List<ColorViewModel>();
                 List<SizeViewModel> sizes = new List<SizeViewModel>();
                 List<SizeColorViewModel> sizeColors = new List<SizeColorViewModel>();
+                List<ProductChoiceViewModel> productChoices = new List<ProductChoiceViewModel>();
 
                 using (Data.Models.ApplicationEntities context = new Data.Models.ApplicationEntities())
                 {
                     colors = context.Database.SqlQuery<ColorViewModel>(sqlColor).ToList();
                     sizes = context.Database.SqlQuery<SizeViewModel>(sqlSize).ToList();
                     sizeColors = context.Database.SqlQuery<SizeColorViewModel>(sqlSizeColor).ToList();
+                    productChoices = context.Database.SqlQuery<ProductChoiceViewModel>(sqlProductChoice).ToList();
                 }
 
                 pvm.Colors = colors;
                 pvm.Sizes = sizes;
                 pvm.SizeColors = sizeColors;
+                pvm.Choices = productChoices;
             }
         }
 

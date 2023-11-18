@@ -47,6 +47,7 @@
     <Compile Include="OrderStatusViewModel.cs" />
     <Compile Include="PromotionViewModel.cs" />
     <Compile Include="HomePageCategoriesModel.cs" />
+    <Compile Include="ProductChoiceViewModel.cs" />
     <Compile Include="SizeViewModel.cs" />
     <Compile Include="SliderImageViewModel.cs" />
     <Compile Include="ProductStockViewModel.cs" />

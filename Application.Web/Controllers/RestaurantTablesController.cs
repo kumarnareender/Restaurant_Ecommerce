@@ -338,28 +338,28 @@ namespace Application.Controllers
                     updateOrder.PayAmount = order.PayAmount;// - updateOrder.ShippingAmount;
                     updateOrder.DueAmount = order.DueAmount;
                     updateOrder.ShippingAmount = order.ShippingAmount;
+                    updateOrder.OrderItems = order.OrderItems;
+                    //foreach (var item in order.OrderItems)
+                    //{
 
-                    foreach (var item in order.OrderItems)
-                    {
+                    //    var orderItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId);
 
-                        var orderItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId);
+                    //    if (orderItem != null)
+                    //    {
+                    //        orderItem.Quantity = item.Quantity;
+                    //        orderItem.CostPrice = item.CostPrice;
+                    //        orderItem.Discount = item.Discount;
+                    //        orderItem.Price = item.Price;
+                    //        orderItem.Printed = false;
+                    //        orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
+                    //        orderItem.Description = item.Description;
+                    //    }
+                    //    else
+                    //    {
+                    //        updateOrder.OrderItems.Add(item);
+                    //    }
 
-                        if (orderItem != null)
-                        {
-                            orderItem.Quantity = item.Quantity;
-                            orderItem.CostPrice = item.CostPrice;
-                            orderItem.Discount = item.Discount;
-                            orderItem.Price = item.Price;
-                            orderItem.Printed = false;
-                            orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
-                            orderItem.Description = item.Description;
-                        }
-                        else
-                        {
-                            updateOrder.OrderItems.Add(item);
-                        }
-
-                    }
+                    //}
 
                     if (order.OrderType != "Save")
                     {
@@ -479,7 +479,8 @@ namespace Application.Controllers
                             ActionDate = oi.ActionDate,
                             Color = oi.Color,
                             Size = oi.Size,
-                            Description = oi.Description
+                            Description = oi.Description,
+                            Options = oi.Options
                         };
                         orderVM.OrderItems.Add(o);
                     }

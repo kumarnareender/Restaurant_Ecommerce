@@ -72,5 +72,6 @@ namespace Application.Model.Models
         public virtual ICollection<Purchase> Purchases { get; set; }
         public virtual ICollection<PurchaseProductStock> PurchaseProductStocks { get; set; }
         public int LastReceivedQuantity { get; set; }
+        public string Option { get; set; }
     }
 }

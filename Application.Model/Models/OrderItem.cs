@@ -21,5 +21,6 @@ namespace Application.Model.Models
         public string Size { get; set; }
         public Nullable<bool> Printed { get; set; }
         public string Description { get; set; }
+        public string Options { get; set; }
     }
 }

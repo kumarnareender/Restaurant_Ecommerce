@@ -9,6 +9,7 @@
     $(".desiDiv").hide();
     $("#restaurant-div").show();
     $(".btnRestaurant").show();
+    //$("#btnCompleteRestOrder").hide();
     //}
 
 
@@ -105,7 +106,7 @@
                     if (recordSet.OrderItems.length > 0) {
                         for (let i = 0; i < recordSet.OrderItems.length; i++) {
                             productIds.push(recordSet.OrderItems[i].ProductId);
-                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description);
+                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description, recordSet.OrderItems[i].Option);
                         }
 
                     }
@@ -496,6 +497,7 @@
             orderItem.Color = cart[i].Color;
             orderItem.Size = cart[i].Size;
             orderItem.Description = $(descriptionInputBoxId).val();
+            orderItem.Options = cart[i].Option;
 
             order.OrderItems.push(orderItem);
             totalAmount += orderItem.TotalPrice;
@@ -820,6 +822,7 @@ function getUserInformation() {
                             $('.item-loading').hide();
                             if (data) {
                                 if (data.IsAdmin) {
+                                    $("#btnCompleteRestOrder").show();
                                     $(".wholesale").removeClass('hide');
                                     $("#shippingAmount").removeClass('hide');
                                     $(".checkout-shippingAmount").addClass('hide');
@@ -863,6 +866,8 @@ function getUserInformation() {
                                     $(".checkout-grandTotal").html(siteCurrency() + newGrandTotal);
 
 
+                                } else {
+                                    $("#btnCompleteRestOrder").hide();
                                 }
 
 
@@ -987,16 +992,16 @@ function getUserInformation() {
 
 
                                 $('#homepage-container-table').append(
-                                    '<div class="grid-item ' + (recordSet[i].IsOccupied ? '' : 'tables-click') + '" data-id="' + recordSet[i].TableNumber + '"> ' +
+                                    '<div class="grid-item ' + (recordSet[i].IsOccupied ? '' : 'tables-click') + '" data-id="' + recordSet[i].TableNumber + '" style="width:19%;"> ' +
                                     '<div class="div-item-container">' +
                                     //'<a class="item-link-container" href="' + link + '"> ' +
                                     '<div class="grid-item-image"> ' +
                                     '<img src="/TableImages/Grid/' + recordSet[i].ImageUrl + '" /> ' +
                                     '</div> ' +
-                                    '<div class="grid-item-info" style=" margin-top: 20px; padding-left: 55px; "> ' +
+                                    '<div class="grid-item-info" style=" margin-top: 20px; "> ' +
 
                                     '<label class="checkbox-container" >'
-                                    + '<span ' + (recordSet[i].IsOccupied ? 'style="color:red;"' : '') + '> ' + recordSet[i].TableNumber + '</span>'
+                                    + '<span ' + (recordSet[i].IsOccupied ? 'style="color:red;"' : '') + '> ' + recordSet[i].TableNumber + (recordSet[i].IsOccupied ? ' - Occupied' : '') + '</span>'
                                     //+ '<div class="col-sm-4"> <img alt="" style="width:90px;" src="' + recordSet[i].ImageUrl + '" /> </div></div>'
                                     + '<input class="_tables" type="checkbox" value="' + recordSet[i].TableNumber + '" id="_table' + recordSet[i].TableNumber + '">'
                                     + '<span class="checkmark" data-id="' + recordSet[i].TableNumber + '" ></span >'
@@ -1043,10 +1048,6 @@ function getUserInformation() {
             }
         });
 
-
-
-
-
     }
     else {
         builtShoppingCartItems();
@@ -1069,6 +1070,7 @@ function builtShoppingCartItems() {
     html += '<tr class="shopping-cart-header">';
     html += '<td>Image</td>';
     html += '<td>Name</td>';
+    //html += '<td>Option</td>';
     html += '<td>Description</td>';
     html += '<td class="center">Price</td>';
     html += '<td class="center">Qty</td>';
@@ -1107,6 +1109,10 @@ function builtShoppingCartItems() {
         //html += '<a href="/Product/Details?id=' + cart[i].Id + '">' + cart[i].Name + '</a>';
         html += '<a">' + cart[i].Name + '</a>';
         html += '</td>';
+
+        //html += '<td class="center">';
+        //html += '<span>' + cart[i].Option + '</span>';
+        //html += '</td>';
 
         html += '<td>';
         html += '<input type="text" class="form-control" style="width:100%;" value="' + cart[i].Description + '" id="' + descriptionInputBoxId + '" />';

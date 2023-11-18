@@ -65,5 +65,7 @@ namespace Application.ViewModel
         public List<ColorViewModel> Colors { get; set; }
         public List<SizeViewModel> Sizes { get; set; }
         public List<SizeColorViewModel> SizeColors { get; set; }
+        public List<ProductChoiceViewModel> Choices { get; set; }
+        public string[] Options { get; set; }
     }
 }

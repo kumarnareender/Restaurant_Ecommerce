@@ -110,7 +110,7 @@ namespace Application.Web.Controllers
                     {
                         if (userService.IsInRole(model.Username, ERoleName.customer.ToString()))
                         {
-                            redirectUrl = string.IsNullOrEmpty(model.ReturnUrl) ? Url.Action("Index", "Customer") : model.ReturnUrl;
+                            redirectUrl = string.IsNullOrEmpty(model.ReturnUrl) ? Url.Action("Index", "Home") : model.ReturnUrl;
                         }
                         else
                         {

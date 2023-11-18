@@ -91,6 +91,28 @@ app.controller('ProductDetailCtrl', ['$rootScope', '$scope', '$http', '$filter',
         $('.max-view-icon').hide();
     }
 
+    $scope.clickChoice = function (value) {
+
+        let p = +window.Choices.find(x => x.Id == value).Amount;
+
+        if ($("#choice_" + value).is(":checked")) {
+            if (window.Description == undefined)
+                window.Description = "," + $("#choice_" + value).val();
+            else
+                window.Description = window.Description + "," + $("#choice_" + value).val();
+
+            window.price = window.price + p;
+
+        } else {
+            window.Description = window.Description.replace("," + $("#choice_" + value).val(), "");
+            window.price = window.price - p;
+        }
+
+        $("#price").text(siteCurrency() + window.price);
+
+        console.log(window.Description);
+    }
+
     $scope.clickSize = function (value) {
 
         let colors = window.SizeColor.filter(x => x.Size.trim() == value);
@@ -130,7 +152,8 @@ app.controller('ProductDetailCtrl', ['$rootScope', '$scope', '$http', '$filter',
                 window.price = data.OnlinePrice;
                 window.name = data.Title;
                 window.Gst = data.Gst;
-                window.SizeColor = data.SizeColors
+                window.SizeColor = data.SizeColors;
+                window.Choices = data.Choices;
 
                 if (data.Sizes != null && data.Sizes != undefined && data.Sizes.length > 0) {
                     let size = data.Sizes[data.Sizes.length - 1].Size;
@@ -291,10 +314,19 @@ app.controller('ProductDetailCtrl', ['$rootScope', '$scope', '$http', '$filter',
 
             let color = document.querySelector('input[name="color"]:checked') != null ? document.querySelector('input[name="color"]:checked').value : "";
             let size = document.querySelector('input[name="size"]:checked') != null ? document.querySelector('input[name="size"]:checked').value : "";
-            if (color != "" && size != "")
-                window.name = window.name + " - " + color + " - " + size;
+            let option = document.querySelector('input[name="option"]:checked') != null ? document.querySelector('input[name="option"]:checked').value : "";
+            let name = window.name;
+            if (color != "")
+                name = name + " - " + color;
+            if (size != "")
+                name = name + " - " + size;
+            if (option != "")
+                name = name + " - " + option;
 
-            addToCart(window.productId, name, qty, window.price, window.imageUrl, window.Gst, 0, color, size);
+            if (window.Description == undefined) {
+                window.Description = ''
+            }
+            addToCart(window.productId, name, qty, window.price, window.imageUrl, window.Gst, 0, color, size, window.Description, option);
 
             animateAddToCart_DetailPage(this);
         });

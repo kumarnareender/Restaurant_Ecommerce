@@ -235,12 +235,12 @@ namespace Application.Common
                 decimal currentPrice = (decimal)price - (decimal)discount;
                 newPrice = currentPrice;
                 priceText = GetCurrencyCode() + String.Format("{0:N0}", currentPrice);
-                oldPriceText = GetCurrencyCode() + String.Format("{0:N0}", price);
+                oldPriceText = GetCurrencyCode() + String.Format("{0:00.00}", price);
             }
             else
             {
                 newPrice = price == null ? 0 : (decimal) price;
-                priceText = GetCurrencyCode() + String.Format("{0:N0}", price);
+                priceText = GetCurrencyCode() + String.Format("{0:00.00}", price);
             }
         }
 
