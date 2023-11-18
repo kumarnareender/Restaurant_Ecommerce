@@ -555,7 +555,7 @@ namespace Application.Web.Controllers
 
     public class TotalItemValues
     {
-        public int TotalItemPosted { get; set; }
-        public decimal TotalItemValue { get; set; }
+        public int? TotalItemPosted { get; set; }
+        public decimal? TotalItemValue { get; set; }
     }
 }

@@ -223,9 +223,13 @@ namespace Application.Web
 
             if (string.IsNullOrEmpty(productId))
             {
+                //sqlQuery = @"select top 24 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName,Gst
+                //            from Products p, ProductImages pi
+                //            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                //            and p.IsFeatured = 1";
                 sqlQuery = @"select top 24 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName,Gst
-                            from Products p, ProductImages pi
-                            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                            from Products p left join ProductImages pi on  p.Id = pi.ProductId
+                            where p.IsApproved = 1 and p.IsDeleted = 0
                             and p.IsFeatured = 1";
             }
             else
@@ -307,9 +311,13 @@ namespace Application.Web
 
             if (string.IsNullOrEmpty(productId))
             {
+                //sqlQuery = @"select top 10 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName, p.Gst
+                //            from Products p, ProductImages pi
+                //            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                //            order by SoldCount desc";
                 sqlQuery = @"select top 10 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName, p.Gst
-                            from Products p, ProductImages pi
-                            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                            from Products p left join ProductImages pi on p.Id = pi.ProductId
+                            where p.IsApproved = 1 and p.IsDeleted = 0
                             order by SoldCount desc";
             }
             else
@@ -358,9 +366,13 @@ namespace Application.Web
 
             if (string.IsNullOrEmpty(productId))
             {
+                //sqlQuery = @"select top 10 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName, p.Gst
+                //            from Products p, ProductImages pi
+                //            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                //            order by p.ActionDate desc";
                 sqlQuery = @"select top 10 p.Id as Id, p.Title as Title, p.OnlinePrice as OnlinePrice, p.OnlineDiscount as Discount, pi.ImageName as PrimaryImageName, p.Gst
-                            from Products p, ProductImages pi
-                            where p.Id = pi.ProductId and pi.IsPrimaryImage = 1 and pi.IsApproved = 1 and p.IsApproved = 1 and p.IsDeleted = 0
+                            from Products p left join  ProductImages pi on p.Id = pi.ProductId
+                            where p.IsApproved = 1 and p.IsDeleted = 0
                             order by p.ActionDate desc";
             }
             else

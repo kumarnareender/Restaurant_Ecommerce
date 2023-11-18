@@ -228,7 +228,7 @@ namespace Application.Controllers
 
                 return isSuccess;
             }
-            catch (Exception)
+            catch (Exception name)
             {
                 return false;
             }
