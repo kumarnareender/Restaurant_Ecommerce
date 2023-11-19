@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace Application.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class RestaurantTablesController : Controller
     {
         private IUserService userService;
@@ -302,12 +302,12 @@ namespace Application.Controllers
 
                 order.Id = orderId;
                 order.OrderCode = orderCode;
-                order.UserId = Utils.GetLoggedInUserId();
+                order.UserId = Utils.GetLoggedInUserId() == ""?null: Utils.GetLoggedInUserId();
                 order.StatusId = 1;
                 order.PaymentStatusId = 3;
                 order.DueAmount = order.PayAmount;
                 order.ActionDate = DateTime.Now;
-                order.ActionBy = Utils.GetLoggedInUserName();
+                order.ActionBy = Utils.GetLoggedInUserName() == "" ? null : Utils.GetLoggedInUserName();
                 foreach (Model.Models.OrderItem item in order.OrderItems)
                 {
                     item.OrderId = orderId;

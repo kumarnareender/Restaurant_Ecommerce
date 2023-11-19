@@ -63,6 +63,8 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
 
     var cart = getCart();
 
+    let choices = description.split(",").sort();
+
     if (cart === null) {
         cart = [];
     }
@@ -70,10 +72,14 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
     var isAdded = false;
 
     for (var i = 0; i < cart.length; i++) {
-        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size && cart[i].Option == option) {
+
+        cartChoices = cart[i].Description.split(",").sort();
+
+
+        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size && cart[i].Option == option && arrayEquals(choices, cartChoices)) {
             cart[i].Quantity = parseInt(cart[i].Quantity, 10) + parseInt(quantity, 10);
-            cart[i].OnlinePrice = parseInt(price, 10);
-            cart[i].Discount = parseInt(discount, 10);
+            cart[i].OnlinePrice = parseFloat(price, 10);
+            cart[i].Discount = parseFloat(discount, 10);
             cart[i].Color = color;
             cart[i].Size = size;
 
@@ -85,12 +91,16 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
     if (!isAdded) {
         cart.push({
             Id: productId, Name: name, Quantity: quantity, OnlinePrice: price, ImageUrl: imageUrl, Gst: gst, Discount: discount,
-            Size: size, Color: color, Description: description, Option:option
+            Size: size, Color: color, Description: description, Option: option
         });
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCounter();
+}
+
+function arrayEquals(x, y) {
+    return Array.isArray(x) && Array.isArray(y) && x.length === y.length && y.every((val, index) => val === y[index]);
 }
 
 function animateAddToCart(obj) {

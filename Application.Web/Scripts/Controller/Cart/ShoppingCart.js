@@ -106,7 +106,7 @@
                     if (recordSet.OrderItems.length > 0) {
                         for (let i = 0; i < recordSet.OrderItems.length; i++) {
                             productIds.push(recordSet.OrderItems[i].ProductId);
-                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description, recordSet.OrderItems[i].Option);
+                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description, recordSet.OrderItems[i].Options);
                         }
 
                     }
@@ -142,7 +142,7 @@
 
         var cart = getCart();
         for (var i = 0; i < cart.length; i++) {
-            var quantityInputBoxId = 'txtQty_' + cart[i].Id;
+            var quantityInputBoxId = 'txtQty_' + cart[i].Id + '_' + i;
             cart[i].Quantity = $('#' + quantityInputBoxId).val();
         }
 
@@ -449,10 +449,10 @@
     //Restaurant Module
     $('.btnSaveRestOrder').click(function () {
         var userStatus = getUserStatus();
-        if (!userStatus.isLoggedIn) {
-            window.location.href = '/Security/Login/?returnUrl=/cart';
-            return;
-        }
+        //if (!userStatus.isLoggedIn) {
+        //    window.location.href = '/Security/Login/?returnUrl=/cart';
+        //    return;
+        //}
 
         showLoader();
 
@@ -482,7 +482,7 @@
         var grandTotal = 0;
 
         for (var i = 0; i < cart.length; i++) {
-            var descriptionInputBoxId = '#txtDescription_' + cart[i].Id;
+            var descriptionInputBoxId = '#txtDescription_' + cart[i].Id + '_' + i;
             var orderItem = {};
 
             var price = parseFloat(cart[i].OnlinePrice, 10);
@@ -496,7 +496,7 @@
             orderItem.ImageUrl = cart[i].ImageUrl;
             orderItem.Color = cart[i].Color;
             orderItem.Size = cart[i].Size;
-            orderItem.Description = $(descriptionInputBoxId).val();
+            orderItem.Description = cart[i].Description;//$(descriptionInputBoxId).val();
             orderItem.Options = cart[i].Option;
 
             order.OrderItems.push(orderItem);
@@ -539,7 +539,7 @@
 
                     bootbox.alert("<h4>Your order has been saved!</h4>", function () { });
                     clearCart();
-                    localStorage.setItem("tableNumber", "");
+                    //localStorage.setItem("tableNumber", "");
                     $(".hideDiv").show();
 
 
@@ -567,6 +567,7 @@
             },
             error: function (xhr) {
                 hideLoader();
+                $("#rest-order-loader").hide();
                 $('#updateStatus').html('');
                 bootbox.alert("<h4>Error occured while placing your order!</h4>", function () { });
             }
@@ -1083,8 +1084,8 @@ function builtShoppingCartItems() {
     for (var i = 0; i < cart.length; i++) {
 
         var itemTotal = (parseFloat(cart[i].OnlinePrice - cart[i].Discount, 10) * parseInt(cart[i].Quantity, 10));
-        var quantityInputBoxId = 'txtQty_' + cart[i].Id;
-        var descriptionInputBoxId = 'txtDescription_' + cart[i].Id;
+        var quantityInputBoxId = 'txtQty_' + cart[i].Id + '_' + i;
+        var descriptionInputBoxId = 'txtDescription_' + cart[i].Id + '_' + i;
 
         let isExist = false;
         let productIds = window.localStorage.getItem("productIds");
