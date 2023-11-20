@@ -302,7 +302,7 @@ namespace Application.Controllers
 
                 order.Id = orderId;
                 order.OrderCode = orderCode;
-                order.UserId = Utils.GetLoggedInUserId() == ""?null: Utils.GetLoggedInUserId();
+                order.UserId = Utils.GetLoggedInUserId() == "" ? null : Utils.GetLoggedInUserId();
                 order.StatusId = 1;
                 order.PaymentStatusId = 3;
                 order.DueAmount = order.PayAmount;
@@ -334,7 +334,8 @@ namespace Application.Controllers
                 {
                     var updateOrder = orderService.GetOrder(table.OrderId);
 
-
+                    updateOrder.UserId = Utils.GetLoggedInUserId() == "" ? null : Utils.GetLoggedInUserId();
+                    updateOrder.ActionBy = Utils.GetLoggedInUserName() == "" ? null : Utils.GetLoggedInUserName();
                     updateOrder.PayAmount = order.PayAmount;// - updateOrder.ShippingAmount;
                     updateOrder.DueAmount = order.DueAmount;
                     updateOrder.ShippingAmount = order.ShippingAmount;
