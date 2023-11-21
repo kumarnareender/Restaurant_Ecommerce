@@ -380,10 +380,13 @@ namespace Application.Controllers
 
                 table.IsOccupied = true;
 
-                if (order.OrderType == "Save")
+                if (order.OrderType != "Save")
                 {
-                    restaurantTablesService.UpdateRestTable(table);
+                    table.IsOccupied = false;
+                    table.OrderId = null;
+                    //restaurantTablesService.UpdateRestTable(table);
                 }
+                restaurantTablesService.UpdateRestTable(table);
 
                 // Generate order barcode
                 AppCommon.GenerateOrderBarcode(order.OrderCode);

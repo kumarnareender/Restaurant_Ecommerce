@@ -539,7 +539,8 @@
 
                     bootbox.alert("<h4>Your order has been saved!</h4>", function () { });
                     clearCart();
-                    //localStorage.setItem("tableNumber", "");
+                    //if (orderType == "Complete")
+                    localStorage.setItem("tableNumber", "");
                     $(".hideDiv").show();
 
 
@@ -550,6 +551,10 @@
 
                     //if (paymentType != "Online") {
                     //window.location.href = '/Customer/OrderConfirm?orderCode=' + data.orderCode;
+                    var userStatus = getUserStatus();
+                    if (!userStatus.isLoggedIn) {
+                        window.location.href = '/Home/Index?tableNumber = ' + order.TableNumber;
+                    }
                     window.location.href = '/Home/Index';
 
                     //}
