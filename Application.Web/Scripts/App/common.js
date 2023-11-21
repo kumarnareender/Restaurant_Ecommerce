@@ -63,7 +63,7 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
 
     var cart = getCart();
 
-    let choices = description.split(",").sort();
+    let choices = description != null ? description.split(",").sort() : [];
 
     if (cart === null) {
         cart = [];
@@ -73,7 +73,7 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
 
     for (var i = 0; i < cart.length; i++) {
 
-        cartChoices = cart[i].Description.split(",").sort();
+        cartChoices = cart[i].Description != null ? cart[i].Description.split(",").sort() : [];
 
 
         if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size && cart[i].Option == option && arrayEquals(choices, cartChoices)) {

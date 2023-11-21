@@ -92,7 +92,7 @@
         <div class="shopping-cart-container"></div>
         <div class="shopping-cart-buttons" style="padding: 10px; background-color: #f2f2f2; border:1px solid #dcdcdc; border-top:0;">
             <button id="btnUpdateCart" style="float:right; margin-left:10px;" class="btn btn-primary">Update Cart</button>
-            &nbsp;<button id="btnClearCart" style="float:right;" class="btn btn-default">Clear Cart</button>
+            &nbsp;<button id="btnClearCart" style="float:right; display:none;" class="btn btn-default">Clear Cart</button>
             <a href="/Home" class="btn btn-warning btn-continue-shopping" style="background-color: #FA2D18 ">Continue Shopping</a>
         </div>
     </div>
@@ -101,7 +101,27 @@
 
             <div id="customer-address-section" class="" style="margin-top:20px; background-color: #fff; border:1px solid #dcdcdc;">
                 <div class="customer-address" style="border-bottom: 1px solid #dcdcdc; padding: 10px; background-color: #f2f2f2; ">
-                    <span style="font-weight:600;">My Address</span>
+                    <span style="font-weight:600;">Order Notes</span>
+                </div>
+                <div style="padding:20px;">
+
+                    <div class="form-group ">
+                        <div class="row">
+                            <span class="col-sm-3 right">Note:</span>
+                            <div class="col-sm-8">
+                                <textarea id="orderNotes" placeholder="Enter order notes" class="form-control" rows="3"></textarea>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="customer-address-section" class="" style="margin-top:20px; background-color: #fff; border:1px solid #dcdcdc;">
+                <div class="customer-address" style="border-bottom: 1px solid #dcdcdc; padding: 10px; background-color: #f2f2f2; ">
+                    @*<span style="font-weight:600;">My Address</span>*@
+                    <span style="font-weight:600;">Update Order</span>
+
                 </div>
                 <div style="padding:20px;">
 
@@ -118,7 +138,7 @@
                             </div>
                         </div>*@
 
-                    <div class="form-group hide" id="wholesale-customer-div">
+                    <!--<div class="form-group hide" id="wholesale-customer-div">
                         <div class="row">
                             <span class="col-sm-3 right">Wholesale Customers:</span>
                             <div class="col-sm-4">
@@ -167,9 +187,9 @@
                             <div class="col-sm-4">
                                 <select id="city" class=" form-control" style="height: 30px; ">
                                     <option value="0">Select City</option>
-                                </select>
-                                @*<input type="text" id="city" placeholder="Enter City" class="form-control" style="height: 30px;" />*@
-                            </div>
+                                </select>-->
+                    @*<input type="text" id="city" placeholder="Enter City" class="form-control" style="height: 30px;" />*@
+                    <!--</div>
                         </div>
                     </div>
                     <div class="form-group customer-address">
@@ -195,15 +215,15 @@
                                 <textarea id="address" placeholder="Enter Address (House number, street, town/village)" class="form-control" rows="3"></textarea>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="form-group">
                         <div class="row">
                             <span class="col-sm-3 right"></span>
-                            <div class="col-sm-3">
-                                <button id="btnUpdateAddress" style="display:none;" class="btn btn-primary hideDiv">Update Address</button>
-                                <span style="margin-left:10px;" id="updateStatus"></span>
-                            </div>
+                            @*<div class="col-sm-3">
+                                    <button id="btnUpdateAddress" style="display:none;" class="btn btn-primary hideDiv">Update Address</button>
+                                    <span style="margin-left:10px;" id="updateStatus"></span>
+                                </div>*@
                             <div class="col-sm-3 btnRestaurant" style="display:none;">
                                 <button id="btnSaveRestOrder" class="btn btn-success theme-back-color btnSaveRestOrder" data-id="Save" style="width:80%; margin-left:100px;">Save</button>
                             </div>
@@ -335,6 +355,133 @@
                     </div>*@
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+
+            <!--<div id="customer-address-section" class="" style="margin-top:20px; background-color: #fff; border:1px solid #dcdcdc;">
+                <div class="customer-address" style="border-bottom: 1px solid #dcdcdc; padding: 10px; background-color: #f2f2f2; ">-->
+            @*<span style="font-weight:600;">My Address</span>*@
+            <!--<span style="font-weight:600;">Update Order</span>
+
+            </div>
+            <div style="padding:20px;">-->
+            @*<div class="form-group wholesale hide">
+                    <div class="row">
+                        <span class="col-sm-3 right">Order Type:</span>
+                        <div class="col-sm-4">
+                            <select id="order-type-shopping-cart" class="form-control">
+                                <option value="Online">Retail Order</option>
+                                <option value="Wholesale">Wholesale Order</option>
+                                <option value="Purchase">Purchase Order</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>*@
+
+            <!--<!--<div class="form-group hide" id="wholesale-customer-div">
+                <div class="row">
+                    <span class="col-sm-3 right">Wholesale Customers:</span>
+                    <div class="col-sm-4">
+                        <select id="wholesale-customer" class=" form-control" style="height: 30px; ">
+                            <option value="0">Select Customer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group hide" id="purchase-supplier-div">
+                <div class="row">
+                    <span class="col-sm-3 right">Suppliers:</span>
+                    <div class="col-sm-4">
+                        <select id="purchase-supplier" class=" form-control" style="height: 30px; ">
+                            <option value="0">Select Supplier</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">Name:</span>
+                    <div class="col-sm-4">
+                        <input type="text" id="firstName" class="form-control" placeholder="Enter Your Name" style="height: 30px;" />
+                    </div>
+                    <div class="col-sm-4 btnRestaurant hideDiv" style="display:none;">
+                        <button id="btnSelectTableRestOrder" class="btn btn-info theme-back-color" data-toggle="modal" data-target="#myModal"
+                                style="width:80%; margin-left:50px;">
+                            Select Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">Mobile:</span>
+                    <div class="col-sm-4">
+                        <input type="text" id="mobile" class="form-control" placeholder="Enter Your Mobile" style="height: 30px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">City:</span>
+                    <div class="col-sm-4">
+                        <select id="city" class=" form-control" style="height: 30px; ">
+                            <option value="0">Select City</option>
+                        </select>-->
+            <!--@*<input type="text" id="city" placeholder="Enter City" class="form-control" style="height: 30px;" />*@-->
+            <!--</div>
+                </div>
+            </div>
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">State:</span>
+                    <div class="col-sm-4">
+                        <input type="text" id="state" placeholder="Enter State" class="form-control" style="height: 30px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">Postal Code:</span>
+                    <div class="col-sm-4">
+                        <input type="text" id="zip" disabled placeholder="Enter Postal Code" class="form-control" style="height: 30px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group customer-address">
+                <div class="row">
+                    <span class="col-sm-3 right">Address:</span>
+                    <div class="col-sm-8">
+                        <textarea id="address" placeholder="Enter Address (House number, street, town/village)" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>-->
+            <!--<div class="form-group">
+                        <div class="row">
+                            <span class="col-sm-3 right"></span>
+                            <div class="col-sm-3">
+                                <button id="btnUpdateAddress" style="display:none;" class="btn btn-primary hideDiv">Update Address</button>
+                                <span style="margin-left:10px;" id="updateStatus"></span>
+                            </div>
+                            <div class="col-sm-3 btnRestaurant" style="display:none;">
+                                <button id="btnSaveRestOrder" class="btn btn-success theme-back-color btnSaveRestOrder" data-id="Save" style="width:80%; margin-left:100px;">Save</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button id="btnCompleteRestOrder" class="  customer-address btn btn-danger theme-back-color btnSaveRestOrder" data-id="Complete" style="width:80%; margin-left:50px;">Complete</button>
+                            </div>
+
+                            <div id="rest-order-loader" style="float: right; position: relative; top: 4px; font-size: 14px; font-weight: 600; display: none;">
+                                <img src="~/Images/ajax_loader_blue_32.gif" />
+                                <span>Order is Processing...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>-->
+        </div>
+
     </div>
 </div>
 

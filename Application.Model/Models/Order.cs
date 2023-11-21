@@ -41,5 +41,6 @@ namespace Application.Model.Models
         public string CustomerId { get; set; }
         public int PaymentStatusId { get; set; }
         public Nullable<int> TableNumber { get; set; }
+        public string Notes { get; set; }
     }
 }

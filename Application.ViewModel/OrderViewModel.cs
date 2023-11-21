@@ -43,6 +43,7 @@ namespace Application.ViewModel
         public decimal TotalAmount { get; set; }
         public DateTime CreatedDate { get; set; }
         public int TableNumber { get; set; }
+        public string Notes { get; set; }
     }
 
     public class OrderItemViewModel

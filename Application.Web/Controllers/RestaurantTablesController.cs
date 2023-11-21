@@ -466,6 +466,7 @@ namespace Application.Controllers
                     orderVM.PaymentStatusId = order.PaymentStatusId;
                     orderVM.PaymentStatus = order.PaymentStatus;
                     orderVM.OrderItems = new List<ViewModel.OrderItemViewModel>();
+                    orderVM.Notes = order.Notes;
                     foreach (Model.Models.OrderItem oi in order.OrderItems)
                     {
                         string title = oi.ProductId == Guid.Empty.ToString() ? oi.Title : oi.Product.Title;

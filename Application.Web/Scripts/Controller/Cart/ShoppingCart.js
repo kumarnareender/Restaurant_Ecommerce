@@ -106,11 +106,13 @@
                     if (recordSet.OrderItems.length > 0) {
                         for (let i = 0; i < recordSet.OrderItems.length; i++) {
                             productIds.push(recordSet.OrderItems[i].ProductId);
-                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '', recordSet.OrderItems[i].Description, recordSet.OrderItems[i].Options);
+                            addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '',
+                                recordSet.OrderItems[i].Description != null ? recordSet.OrderItems[i].Description : '', recordSet.OrderItems[i].Options);
                         }
 
                     }
                 }
+                $("#orderNotes").val(recordSet.Notes);
                 window.localStorage.setItem("productIds", productIds);
                 console.log(recordSet);
                 builtShoppingCartItems();
@@ -520,6 +522,7 @@
         order.Discount = $("#discount").val();
         order.ShippingAmount = shippingAmount;
         order.PayAmount = grandTotal - order.Discount;
+        order.Notes = $("#orderNotes").val();
         //order.IsWholeSaleOrder = order.OrderMode == "Wholesale" ? true : false;
         /*$("#order-type-shopping-cart").val()*/;
         //order.CustomerId = $("#wholesale-customer").val()
@@ -828,7 +831,7 @@ function getUserInformation() {
                             $('.item-loading').hide();
                             if (data) {
                                 if (data.IsAdmin) {
-                                    $("#btnCompleteRestOrder").show();
+                                 
                                     $(".wholesale").removeClass('hide');
                                     $("#shippingAmount").removeClass('hide');
                                     $(".checkout-shippingAmount").addClass('hide');
@@ -874,6 +877,8 @@ function getUserInformation() {
 
                                 } else {
                                     $("#btnCompleteRestOrder").hide();
+                                    $("#btnClearCart").show();
+                                    $("#btnCompleteRestOrder").show();
                                 }
 
 
