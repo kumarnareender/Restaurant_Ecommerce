@@ -279,7 +279,7 @@ namespace Application.Controllers
         {
             //Model.Models.Order order = new Model.Models.Order();
             //return null;
-
+            string message = string.Empty;
             var table = restaurantTablesService.GetRestTableByTableNumber(order.TableNumber.Value);
 
             string branchName = Utils.GetSetting("CompanyName");
@@ -394,7 +394,7 @@ namespace Application.Controllers
             }
             catch (Exception ex)
             {
-                string message = ex.Message;
+                message = $"{ex.Message}";
                 isSuccess = false;
             }
 
@@ -402,7 +402,8 @@ namespace Application.Controllers
             {
                 isSuccess = isSuccess,
                 orderId = orderId,
-                orderCode = orderCode
+                orderCode = orderCode,
+                Message = message
             }, JsonRequestBehavior.AllowGet);
         }
 

@@ -568,12 +568,14 @@
                 }
                 else {
                     //hideLoader();
+                    console.log(data);
                     bootbox.alert("<h4>Failed to place your order!</h4>", function () { });
                 }
 
                 $('#updateStatus').html('');
             },
             error: function (xhr) {
+                console.log(xhr);
                 hideLoader();
                 $("#rest-order-loader").hide();
                 $('#updateStatus').html('');
@@ -831,7 +833,7 @@ function getUserInformation() {
                             $('.item-loading').hide();
                             if (data) {
                                 if (data.IsAdmin) {
-                                 
+
                                     $(".wholesale").removeClass('hide');
                                     $("#shippingAmount").removeClass('hide');
                                     $(".checkout-shippingAmount").addClass('hide');
@@ -1069,6 +1071,10 @@ function getUserInformation() {
 
 function builtShoppingCartItems() {
 
+
+    var userStatus = getUserStatus();
+
+
     var subTotal = 0;
     var vatAmount = 0;
     var shippingAmount = getShippingCharge();
@@ -1088,7 +1094,9 @@ function builtShoppingCartItems() {
     html += '<td class="center">Discount</td>';
     html += '<td class="center">Total</td>';
     html += '<td class="center">Gst</td>';
+    //if (userStatus.isLoggedIn) {
     html += '<td class="center">Remove</td>';
+    //}
     html += '</tr>';
 
     for (var i = 0; i < cart.length; i++) {
@@ -1133,9 +1141,16 @@ function builtShoppingCartItems() {
         html += '<span>' + siteCurrency() + cart[i].OnlinePrice + '</span>';
         html += '</td>';
 
-        html += '<td>';
-        html += '<input type="number" class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
-        html += '</td>';
+        if (userStatus.isLoggedIn) {
+            html += '<td>';
+            html += '<input type="number" class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
+            html += '</td>';
+        } else {
+            html += '<td>';
+            html += '<input type="number" class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
+            html += '</td>';
+        }
+
 
         html += '<td class="center">';
         html += '<span>' + siteCurrency() + (cart[i].Discount * cart[i].Quantity).toFixed(2) + '</span>';
@@ -1149,10 +1164,17 @@ function builtShoppingCartItems() {
         html += '<td class="center">';
         html += '<span>' + calculateGst(itemTotal, cart[i].Gst) + '</span>';
         html += '</td>';
-
+        //if (userStatus.isLoggedIn) {
         html += '<td class="center">';
         html += '<img id="' + cart[i].Id + '" class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';
         html += '</td>';
+        //}
+        //else {
+        //    html += '<td class="center">';
+        //    html += '<img id="' + cart[i].Id + '" disabled class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';
+        //    html += '</td>';
+        //}
+
 
         html += '</tr>';
     }
