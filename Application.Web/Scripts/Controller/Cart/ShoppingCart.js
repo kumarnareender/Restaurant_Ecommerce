@@ -17,13 +17,15 @@
 
     if (tableNumber != null && tableNumber != "") {
         localStorage.setItem("tableNumber", tableNumber);
-        GetOrderByTableNumber(tableNumber);
+        if (location.search.includes("cart"))
+            GetOrderByTableNumber(tableNumber);
         $(".hideDiv").hide();
     }
 
     let localTableNumber = localStorage.getItem("tableNumber");
     if (localTableNumber != null && localTableNumber != "" && (tableNumber == null || tableNumber == "")) {
-        GetOrderByTableNumber(localTableNumber);
+        if (location.search.includes("cart"))
+            GetOrderByTableNumber(localTableNumber);
 
         $(".hideDiv").hide();
     }
@@ -831,7 +833,7 @@ function getUserInformation() {
                             $('.item-loading').hide();
                             if (data) {
                                 if (data.IsAdmin) {
-                                 
+
                                     $(".wholesale").removeClass('hide');
                                     $("#shippingAmount").removeClass('hide');
                                     $(".checkout-shippingAmount").addClass('hide');
