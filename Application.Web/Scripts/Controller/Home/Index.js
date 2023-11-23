@@ -88,6 +88,7 @@ app.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$filter', '$locati
     var tableNumber = getParam('tableNumber');
     if (tableNumber != null && tableNumber != "" && tableNumber != undefined) {
         localStorage.setItem("tableNumber", tableNumber);
+        localStorage.setItem("isItemGotForCart", "");
     }
 
     loadSliderImageList();

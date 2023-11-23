@@ -14,17 +14,22 @@
 
 
     var tableNumber = getParam('tableNumber');
-
+    let isDataGet = localStorage.getItem("isItemGotForCart");
     if (tableNumber != null && tableNumber != "") {
         localStorage.setItem("tableNumber", tableNumber);
-        if (location.search.includes("cart"))
+        //if (window.location.href.includes("cart") || window.location.href.includes("Cart"))
+        if (isDataGet == '' || isDataGet == null || isDataGet == false || isDataGet == 'false')
             GetOrderByTableNumber(tableNumber);
         $(".hideDiv").hide();
     }
 
     let localTableNumber = localStorage.getItem("tableNumber");
     if (localTableNumber != null && localTableNumber != "" && (tableNumber == null || tableNumber == "")) {
-        if (location.search.includes("cart"))
+        //if (window.location.href.includes("cart") || window.location.href.includes("Cart"))
+
+
+
+        if (isDataGet == '' || isDataGet == null || isDataGet == false || isDataGet == 'false')
             GetOrderByTableNumber(localTableNumber);
 
         $(".hideDiv").hide();
@@ -53,7 +58,16 @@
     $(document).on('click', '.delete-shopping-cart-item', function () {
         var id = $(this).attr('id');
 
-        removeCartItem(id)
+        let size = $(this).attr('size');
+        let color = $(this).attr('color');
+        let option = $(this).attr('option');
+        let description = $(this).attr('description');
+        let printed = $(this).attr('printed');
+        let isExist = $(this).attr('isexist');
+        let pk = $(this).attr('pk');
+
+        //removeCartItem(id);
+        removeCartBySpecificItem(id, pk)
 
         var currentTr = $(this).closest("tr");
         $(currentTr).remove();
@@ -101,6 +115,7 @@
             data: { tableId: dataid },
             success: function (recordSet) {
 
+                localStorage.setItem("isItemGotForCart", true);
                 clearCartByProductIds();
                 let productIds = [];
 
@@ -109,7 +124,8 @@
                         for (let i = 0; i < recordSet.OrderItems.length; i++) {
                             productIds.push(recordSet.OrderItems[i].ProductId);
                             addToCart(recordSet.OrderItems[i].ProductId, recordSet.OrderItems[i].ProductName, recordSet.OrderItems[i].Quantity, recordSet.OrderItems[i].Price, recordSet.OrderItems[i].ImageUrl, 0, 0, '', '',
-                                recordSet.OrderItems[i].Description != null ? recordSet.OrderItems[i].Description : '', recordSet.OrderItems[i].Options);
+                                recordSet.OrderItems[i].Description != null ? recordSet.OrderItems[i].Description : '',
+                                recordSet.OrderItems[i].Options != null ? recordSet.OrderItems[i].Options : '', recordSet.OrderItems[i].Printed, true);
                         }
 
                     }
@@ -134,7 +150,10 @@
                 if (result) {
                     clearCart();
                     localStorage.setItem("tableNumber", "");
+                    $("#cart-text").text("Table Number: ");
                     $(".hideDiv").show();
+                    //$("#isItemGotForCart").val(false);
+                    localStorage.setItem("isItemGotForCart", "");
                     builtShoppingCartItems();
 
                 }
@@ -880,11 +899,11 @@ function getUserInformation() {
 
 
                                 } else {
-                                    $("#btnCompleteRestOrder").hide();
-                                    $("#btnClearCart").show();
-                                    $("#btnCompleteRestOrder").show();
-                                }
 
+                                }
+                                $("#btnCompleteRestOrder").hide();
+                                $("#btnClearCart").show();
+                                $("#btnCompleteRestOrder").show();
 
                                 $('#firstName').val(data.FirstName);
                                 $('#mobile').val(data.Mobile);
@@ -1090,6 +1109,7 @@ function builtShoppingCartItems() {
     html += '<td>Image</td>';
     html += '<td>Name</td>';
     //html += '<td>Option</td>';
+    html += '<td>Printed</td>';
     html += '<td>Description</td>';
     html += '<td class="center">Price</td>';
     html += '<td class="center">Qty</td>';
@@ -1102,6 +1122,8 @@ function builtShoppingCartItems() {
     html += '</tr>';
 
     for (var i = 0; i < cart.length; i++) {
+
+        let pk = cart[i].Id + "_" + cart[i].Printed + "_" + cart[i].IsExist + "_" + cart[i].Option;
 
         var itemTotal = (parseFloat(cart[i].OnlinePrice - cart[i].Discount, 10) * parseInt(cart[i].Quantity, 10));
         var quantityInputBoxId = 'txtQty_' + cart[i].Id + '_' + i;
@@ -1126,7 +1148,7 @@ function builtShoppingCartItems() {
         html += '<img src="' + cart[i].ImageUrl + '" />';
         html += '</td>';
 
-        html += '<td ' + (isExist ? 'style=" background-color: bisque; "' : '') + '>';
+        html += '<td ' + (isExist && cart[i].IsExist ? 'style=" background-color: bisque; "' : '') + '>';
         //html += '<a href="/Product/Details?id=' + cart[i].Id + '">' + cart[i].Name + '</a>';
         html += '<a">' + cart[i].Name + '</a>';
         html += '</td>';
@@ -1136,6 +1158,10 @@ function builtShoppingCartItems() {
         //html += '</td>';
 
         html += '<td>';
+        html += '<span>' + cart[i].Printed + '</span>';
+        html += '</td>';
+
+        html += '<td>';
         html += '<input type="text" class="form-control" style="width:100%;" value="' + cart[i].Description + '" id="' + descriptionInputBoxId + '" />';
         html += '</td>';
 
@@ -1143,9 +1169,9 @@ function builtShoppingCartItems() {
         html += '<span>' + siteCurrency() + cart[i].OnlinePrice + '</span>';
         html += '</td>';
 
-        if (userStatus.isLoggedIn) {
+        if (cart[i].IsExist && !userStatus.isAdmin || cart[i].Printed) {
             html += '<td>';
-            html += '<input type="number" class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
+            html += '<input type="number" readonly class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
             html += '</td>';
         } else {
             html += '<td>';
@@ -1166,11 +1192,11 @@ function builtShoppingCartItems() {
         html += '<td class="center">';
         html += '<span>' + calculateGst(itemTotal, cart[i].Gst) + '</span>';
         html += '</td>';
-        //if (userStatus.isLoggedIn) {
-        html += '<td class="center">';
-        html += '<img id="' + cart[i].Id + '" class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';
-        html += '</td>';
-        //}
+        if (!cart[i].IsExist || userStatus.isAdmin && !cart[i].Printed) {
+            html += '<td class="center">';
+            html += '<img id="' + cart[i].Id + '" pk=' + pk + '  size="' + cart[i].Size + '"  color="' + cart[i].Color + '"  printed="' + cart[i].Printed + '"  isExist="' + cart[i].IsExist + '"  option="' + cart[i].Option + '"    class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';
+            html += '</td>';
+        }
         //else {
         //    html += '<td class="center">';
         //    html += '<img id="' + cart[i].Id + '" disabled class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';

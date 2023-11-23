@@ -37,6 +37,7 @@
 
     <div id="wrapper">
         <input hidden value=" @{var appType = Application.Common.Utils.GetSetting("ApplicationType"); @appType;}" id="appType" />
+        <input hidden value="false" id="isItemGotForCart"/>
         <!-- Container -->
         <div id="container" class="boxed-page-NONE">
 
@@ -190,8 +191,10 @@
                             <div class="app-hide" style="float:left; margin-left:5px;">
                                 <a href="/Product/Search?cat=0&loc=0&search=&discount=yes&t=@{var ticks = DateTime.Now.Ticks.ToString(); @ticks;}" class="blink_me" style="margin-left:5px;">Special Offers</a>
                             </div>
-                            <div style="float:right; margin-right: 15px;">
+                            <div style="float:right; margin-right: 15px;" class="top-bar-right">
                                 <a style="color: #fff;" href="/Home">Home</a>
+                                <a style="color: #fff;" href="/Order/OrderList">Orders</a>
+                                <a style="color: #fff;" href="/cart">View Cart</a>
                             </div>
                         </div>
                     </div>
@@ -479,7 +482,7 @@
             html += '</td>';
 
             html += '<td>';
-            html += '<span>' + siteCurrency() + totalAmount + '</span>';
+            html += '<span>' + siteCurrency() + totalAmount.toFixed(2) + '</span>';
             html += '</td>';
 
             html += '</tr>';

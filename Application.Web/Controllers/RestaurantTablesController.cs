@@ -486,7 +486,8 @@ namespace Application.Controllers
                             Color = oi.Color,
                             Size = oi.Size,
                             Description = oi.Description,
-                            Options = oi.Options
+                            Options = oi.Options,
+                            Printed = oi.Printed.Value
                         };
                         orderVM.OrderItems.Add(o);
                     }

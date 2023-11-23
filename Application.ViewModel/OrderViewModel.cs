@@ -63,5 +63,6 @@ namespace Application.ViewModel
         public string Size { get; set; }
         public string Description { get; set; }
         public string Options { get; set; }
+        public bool Printed { get; set; }
     }
 }

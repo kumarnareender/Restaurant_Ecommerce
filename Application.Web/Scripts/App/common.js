@@ -59,8 +59,10 @@ function getSummaryAmount() {
     return obj;
 }
 
-function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '', description = '', option = '') {
+function addToCart(productId, name, quantity, price, imageUrl, gst, discount, color = '', size = '',
+    description = '', option = '', printed = false, isExist = false) {
 
+    let pk = productId + "_" + printed + "_" + isExist + "_" + option;
     var cart = getCart();
 
     let choices = description != null ? description.split(",").sort() : [];
@@ -76,7 +78,11 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
         cartChoices = cart[i].Description != null ? cart[i].Description.split(",").sort() : [];
 
 
-        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size && cart[i].Option == option && arrayEquals(choices, cartChoices)) {
+        if (cart[i].Id == productId && cart[i].Color == color && cart[i].Size == size
+            && cart[i].Option == option && arrayEquals(choices, cartChoices)
+            && cart[i].Printed == printed && cart[i].IsExist == isExist
+        ) {
+            cart[i].Pk = pk;
             cart[i].Quantity = parseInt(cart[i].Quantity, 10) + parseInt(quantity, 10);
             cart[i].OnlinePrice = parseFloat(price, 10);
             cart[i].Discount = parseFloat(discount, 10);
@@ -90,8 +96,8 @@ function addToCart(productId, name, quantity, price, imageUrl, gst, discount, co
 
     if (!isAdded) {
         cart.push({
-            Id: productId, Name: name, Quantity: quantity, OnlinePrice: price, ImageUrl: imageUrl, Gst: gst, Discount: discount,
-            Size: size, Color: color, Description: description, Option: option
+            Pk: pk, Id: productId, Name: name, Quantity: quantity, OnlinePrice: price, ImageUrl: imageUrl, Gst: gst, Discount: discount,
+            Size: size, Color: color, Description: description, Option: option, Printed: printed, IsExist: isExist
         });
     }
 
@@ -191,9 +197,29 @@ function removeCartItem(productId) {
     updateCartCounter();
 }
 
+function removeCartBySpecificItem(productId, pk) {
+
+    if (productId) {
+        var cartItems = jQuery.removeItemFromArray(productId, pk, getCart());
+    }
+    else {
+        var cartItems = [];
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    updateCartCounter();
+}
+
 jQuery.removeFromArray = function (value, arr) {
     return jQuery.grep(arr, function (elem, index) {
         return elem.Id !== value;
+    });
+};
+
+jQuery.removeItemFromArray = function (value, pk, arr) {
+    return jQuery.grep(arr, function (elem, index) {
+        return elem.Pk !== pk;
+        //&& elem.Color !== color && elem.Size !== size && elem.Option !== option;
     });
 };
 

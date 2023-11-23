@@ -4,6 +4,21 @@
 
 @media only screen and (max-width : 768px) {
 
+
+
+    .top-bar-right a {
+        border-right: 1px solid #dcdcdc !important;
+        color: #fff;
+    }
+
+    .top-bar-right a {
+        border-right: 1px solid #dcdcdc;
+        padding: 14px;
+        position: relative;
+        top: 10px;
+        font-size: 15px;
+    }
+
     .support-item {
         padding: 10px 15px;
         margin-bottom: 5px;
