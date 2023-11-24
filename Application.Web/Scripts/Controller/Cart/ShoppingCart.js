@@ -478,7 +478,7 @@
         //}
 
         showLoader();
-
+        let localTableNumber = localStorage.getItem("tableNumber");
         if ((localTableNumber == "" || localTableNumber == null) && ($("._tables:checked").val() == null || $("._tables:checked").val() == undefined)) {
             bootbox.alert("<h4>Please select table first!</h4>", function () { });
             return;
@@ -498,6 +498,13 @@
         order.OrderItems = [];
 
         var cart = getCart();
+
+        if (cart.length == 0) {
+            bootbox.alert("<h4>Cart is empty please add atleast one item!</h4>", function () { });
+            return;
+        }
+
+
         var totalAmount = 0;
         var vatAmount = 0;
         var val = 0;
@@ -521,6 +528,7 @@
             orderItem.Size = cart[i].Size;
             orderItem.Description = cart[i].Description;//$(descriptionInputBoxId).val();
             orderItem.Options = cart[i].Option;
+            orderItem.IsExisted = cart[i].IsExist;
 
             order.OrderItems.push(orderItem);
             totalAmount += orderItem.TotalPrice;
@@ -1169,7 +1177,7 @@ function builtShoppingCartItems() {
         html += '<span>' + siteCurrency() + cart[i].OnlinePrice + '</span>';
         html += '</td>';
 
-        if (cart[i].IsExist && !userStatus.isAdmin || cart[i].Printed) {
+        if ((cart[i].IsExist && !userStatus.isLoggedIn) || cart[i].Printed) {
             html += '<td>';
             html += '<input type="number" readonly class="font-control" style="width:50px; text-align:center;" value="' + cart[i].Quantity + '" id="' + quantityInputBoxId + '" />';
             html += '</td>';
@@ -1192,7 +1200,7 @@ function builtShoppingCartItems() {
         html += '<td class="center">';
         html += '<span>' + calculateGst(itemTotal, cart[i].Gst) + '</span>';
         html += '</td>';
-        if (!cart[i].IsExist || userStatus.isAdmin && !cart[i].Printed) {
+        if (!cart[i].IsExist || userStatus.isLoggedIn && !cart[i].Printed) {
             html += '<td class="center">';
             html += '<img id="' + cart[i].Id + '" pk=' + pk + '  size="' + cart[i].Size + '"  color="' + cart[i].Color + '"  printed="' + cart[i].Printed + '"  isExist="' + cart[i].IsExist + '"  option="' + cart[i].Option + '"    class="delete-shopping-cart-item img-cart" src="/Images/cross.png" style="cursor:pointer;">';
             html += '</td>';

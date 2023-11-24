@@ -22,5 +22,6 @@ namespace Application.Model.Models
         public Nullable<bool> Printed { get; set; }
         public string Description { get; set; }
         public string Options { get; set; }
+        public bool IsExisted { get; set; }
     }
 }

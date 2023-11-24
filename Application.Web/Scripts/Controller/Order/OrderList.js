@@ -52,8 +52,8 @@ app.factory('orderListService', [
 
 app.controller('AdminOrderListCtrl', ['$rootScope', '$scope', '$http', '$filter', '$location', 'Enum', 'orderListService', function ($rootScope, $scope, $http, $filter, $location, Enum, orderListService) {
 
-
-
+    localStorage.setItem("tableNumber", "");
+    localStorage.setItem("isItemGotForCart", "");
     $.ajax({
         dataType: "json",
         url: '/Order/GetStatuses',

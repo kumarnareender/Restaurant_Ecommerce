@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Application.Model.Models;
+using Application.Model.Models.Mapping;
 using Application.Service;
 using Application.ViewModel;
 using Application.Web.App_Code;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using OrderItem = Application.Model.Models.OrderItem;
 
 namespace Application.Controllers
 {
@@ -328,6 +330,12 @@ namespace Application.Controllers
                         order.PaymentStatusId = 1;
 
                     }
+
+                    foreach (Model.Models.OrderItem item in order.OrderItems)
+                    {
+                        item.IsExisted = true;
+                    }
+
                     orderService.CreateOrder(order);
                 }
                 else
@@ -339,28 +347,62 @@ namespace Application.Controllers
                     updateOrder.PayAmount = order.PayAmount;// - updateOrder.ShippingAmount;
                     updateOrder.DueAmount = order.DueAmount;
                     updateOrder.ShippingAmount = order.ShippingAmount;
-                    updateOrder.OrderItems = order.OrderItems;
-                    //foreach (var item in order.OrderItems)
-                    //{
+                    //updateOrder.OrderItems = order.OrderItems;
 
-                    //    var orderItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId);
+                    //Delete items from the cart
 
-                    //    if (orderItem != null)
-                    //    {
-                    //        orderItem.Quantity = item.Quantity;
-                    //        orderItem.CostPrice = item.CostPrice;
-                    //        orderItem.Discount = item.Discount;
-                    //        orderItem.Price = item.Price;
-                    //        orderItem.Printed = false;
-                    //        orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
-                    //        orderItem.Description = item.Description;
-                    //    }
-                    //    else
-                    //    {
-                    //        updateOrder.OrderItems.Add(item);
-                    //    }
+                    List<Model.Models.OrderItem> temp = new List<Model.Models.OrderItem>();
 
-                    //}
+                    foreach (var item in updateOrder.OrderItems)
+                    {
+                        var orderItem = order.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId
+                        && x.Options == item.Options && x.Printed == false);
+
+                        if (orderItem == null)
+                        {
+                            DeleteOrderItems(item);
+                            //updateOrder.OrderItems.Remove(item);
+                        }
+
+                    }
+
+                    foreach (var item in order.OrderItems)
+                    {
+                        var orderItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId
+                        && x.Options == item.Options && x.Printed == false && x.IsExisted == item.IsExisted);
+
+                        if (orderItem != null)
+                        {
+                            orderItem.Quantity = item.Quantity;
+                            orderItem.CostPrice = item.CostPrice;
+                            orderItem.Discount = item.Discount;
+                            orderItem.Price = item.Price;
+                            orderItem.Printed = false;
+                            orderItem.TotalPrice = orderItem.Quantity * orderItem.Price;
+                            orderItem.Description = item.Description;
+                        }
+                        else
+                        {
+                            var existingItem = updateOrder.OrderItems.FirstOrDefault(x => x.ProductId == item.ProductId
+                            && x.Options == item.Options && x.Printed == false);
+
+
+                            if (existingItem != null)
+                            {
+                                existingItem.Quantity += item.Quantity;
+                                existingItem.Discount += item.Discount;
+                                existingItem.TotalPrice = existingItem.Quantity * existingItem.Price;
+                            }
+                            else
+                            {
+                                item.IsExisted = true;
+                                updateOrder.OrderItems.Add(item);
+                            }
+                        }
+
+                    }
+
+
 
                     if (order.OrderType != "Save")
                     {
@@ -405,6 +447,17 @@ namespace Application.Controllers
                 orderCode = orderCode,
                 Message = message
             }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private void DeleteOrderItems(OrderItem item)
+        {
+            string option = item.Options == null ? "options is null" : $"options = '{item.Options}'";
+            string sqlQuery = $" delete from orderitems where id = '{item.Id}' and {option} and printed = 0;";
+            using (Data.Models.ApplicationEntities context = new Data.Models.ApplicationEntities())
+            {
+                context.Database.ExecuteSqlCommand(sqlQuery);
+            }
         }
 
         public JsonResult GetRestaurantTables()
